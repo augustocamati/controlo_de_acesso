@@ -36,7 +36,7 @@ export default function RegistroVisitantes() {
           </div>
           <div>
             <Label htmlFor="rg">BI</Label>
-            <Input id="rg" {...register("rg", { required: true })} />
+            <Input id="rg" {...register("bi", { required: true })} />
             {errors.rg && <span className="text-red-500">Este campo é obrigatório</span>}
           </div>
           <div>

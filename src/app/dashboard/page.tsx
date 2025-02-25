@@ -17,12 +17,27 @@ import {
 } from "chart.js"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, Title, Tooltip, Legend, PointElement)
+type ChartData = {
+  labels: string[]
+  datasets: {
+    label: string
+    data: number[]
+    borderColor: string
+    tension: number
+  }[]
+}
 
+type RoomAccess = {
+  room: string
+  status: string
+  lastAccess: string
+}
 export default function Dashboard() {
-  const [roomAccess, setRoomAccess] = useState([])
-  const [accessData, setAccessData] = useState({
+
+  const [roomAccess, setRoomAccess] = useState<RoomAccess[]>([])
+  const [accessData, setAccessData] = useState<ChartData>({
     labels: [],
-    datasets: [{ data: [] }],
+    datasets: [],
   })
 
   useEffect(() => {

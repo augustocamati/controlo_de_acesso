@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 import { useState } from "react"
-import { useForm } from "react-hook-form"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -11,10 +11,11 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 type Employee = {
   id: number
   name: string
-  role: string
+  
   email:string
   department:string
 }
+type EmployeeFormData = Omit<Employee, "id">
 export default function EmployeeRegistration() {
   const {
     register,
@@ -25,11 +26,11 @@ export default function EmployeeRegistration() {
   const [employees, setEmployees] = useState<Employee[]>([])
   const [role, setRole] = useState("")
 
-  const onSubmit = (data: Omit<Employee, "id">) => {
-    setEmployees([...employees, { ...data, role, id: Date.now() }])
-    reset()
-    setRole("")
-  }
+ const onSubmit: SubmitHandler<EmployeeFormData> = (data) => {
+   setEmployees([...employees, { ...data,  id: Date.now() }])
+   reset()
+   setRole("")
+ }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -86,7 +87,7 @@ export default function EmployeeRegistration() {
             <TableRow key={employee.id}>
               <TableCell>{employee.name}</TableCell>
               <TableCell>{employee.email}</TableCell>
-              <TableCell>{employee.role}</TableCell>
+              <TableCell>{role}</TableCell>
               <TableCell>{employee.department}</TableCell>
             </TableRow>
           ))}

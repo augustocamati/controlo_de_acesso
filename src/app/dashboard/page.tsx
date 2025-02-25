@@ -16,28 +16,22 @@ import {
   PointElement,
 } from "chart.js"
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, LineElement, Title, Tooltip, Legend, PointElement)
-type ChartData = {
-  labels: string[]
-  datasets: {
-    label: string
-    data: number[]
-    borderColor: string
-    tension: number
-  }[]
-}
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend,
+  PointElement
+)
 
-type RoomAccess = {
-  room: string
-  status: string
-  lastAccess: string
-}
 export default function Dashboard() {
-
-  const [roomAccess, setRoomAccess] = useState<RoomAccess[]>([])
-  const [accessData, setAccessData] = useState<ChartData>({
+  const [roomAccess, setRoomAccess] = useState([])
+  const [accessData, setAccessData] = useState({
     labels: [],
-    datasets: [],
+    datasets: [{ data: [] }],
   })
 
   useEffect(() => {
@@ -57,7 +51,10 @@ export default function Dashboard() {
         datasets: [
           {
             label: "Acessos por minuto",
-            data: [...prev.datasets[0].data, Math.floor(Math.random() * 10)].slice(-10),
+            data: [
+              ...prev.datasets[0].data,
+              Math.floor(Math.random() * 10),
+            ].slice(-10),
             borderColor: "rgb(75, 192, 192)",
             tension: 0.1,
           },
@@ -118,8 +115,16 @@ export default function Dashboard() {
               <CardTitle>Quarto {room.room}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className={room.status === "Ocupado" ? "text-red-500" : "text-green-500"}>{room.status}</p>
-              <p className="text-sm text-gray-500">Último acesso: {room.lastAccess}</p>
+              <p
+                className={
+                  room.status === "Ocupado" ? "text-red-500" : "text-green-500"
+                }
+              >
+                {room.status}
+              </p>
+              <p className="text-sm text-gray-500">
+                Último acesso: {room.lastAccess}
+              </p>
             </CardContent>
           </Card>
         ))}
@@ -127,4 +132,3 @@ export default function Dashboard() {
     </Layout>
   )
 }
-

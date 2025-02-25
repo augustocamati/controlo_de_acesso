@@ -35,7 +35,7 @@ export default function RegistroVisitantes() {
             {errors.nome && <span className="text-red-500">Este campo é obrigatório</span>}
           </div>
           <div>
-            <Label htmlFor="rg">RG</Label>
+            <Label htmlFor="rg">BI</Label>
             <Input id="rg" {...register("rg", { required: true })} />
             {errors.rg && <span className="text-red-500">Este campo é obrigatório</span>}
           </div>
@@ -59,7 +59,7 @@ export default function RegistroVisitantes() {
         <TableHeader>
           <TableRow>
             <TableHead>Nome</TableHead>
-            <TableHead>RG</TableHead>
+            <TableHead>BI</TableHead>
             <TableHead>Motivo da Visita</TableHead>
             <TableHead>Paciente Visitado</TableHead>
             <TableHead>Hora de Entrada</TableHead>
@@ -69,7 +69,7 @@ export default function RegistroVisitantes() {
           {visitantes.map((visitante) => (
             <TableRow key={visitante.id}>
               <TableCell>{visitante.nome}</TableCell>
-              <TableCell>{visitante.rg}</TableCell>
+              <TableCell>{visitante.bi}</TableCell>
               <TableCell>{visitante.motivoVisita}</TableCell>
               <TableCell>{visitante.pacienteVisitado}</TableCell>
               <TableCell>{visitante.horaEntrada}</TableCell>

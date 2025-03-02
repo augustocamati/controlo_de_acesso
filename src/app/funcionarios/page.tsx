@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import Layout from "@/components/layout"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 
 export default function RegistroFuncionarios() {
+  useEffect( ()=>{
+   fetch("http://localhost:3000/api/funcionarios")
+     .then((res) => res.json())
+     .then((data) => {setFuncionarios(data) ; console.log("funcionarios", data)})
+ 
+ 
+  
+ 
+  },[])
   const {
     register,
     handleSubmit,
@@ -19,8 +28,19 @@ export default function RegistroFuncionarios() {
   const [funcionarios, setFuncionarios] = useState([])
   const [cargo, setCargo] = useState("")
 
-  const onSubmit = (data) => {
-    setFuncionarios([...funcionarios, { ...data, cargo, id: Date.now() }])
+  const onSubmit = async (data) => {
+    await fetch("http://localhost:3000/api/funcionarios", {
+      method: "post",
+      headers: { "Content-Type": "application/json" },
+      body:JSON.stringify( {
+       ...data,
+       cargo
+      },)
+    })
+    .then(res=> console.log('res', res))
+
+     
+   setFuncionarios([...funcionarios, { ...data, cargo, id: Date.now() }])
     reset()
     setCargo("")
   }

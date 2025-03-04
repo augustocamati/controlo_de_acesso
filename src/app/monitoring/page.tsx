@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import Layout from "@/components/layout"
 
 export default function RealTimeMonitoring() {
   const [accessLogs, setAccessLogs] = useState([])
@@ -20,7 +19,7 @@ export default function RealTimeMonitoring() {
         location: `Area ${Math.floor(Math.random() * 10)}`,
         timestamp: new Date().toLocaleString(),
       }
-      setAccessLogs((prevLogs) => [newLog, ...prevLogs.slice(0, 19)])
+      setAccessLogs((prevLogs) => [newLog, ...prevLogs.slice(0, 9)])
 
       if (Math.random() < 0.1) {
         setAlerts((prevAlerts) => [
@@ -38,7 +37,7 @@ export default function RealTimeMonitoring() {
   }, [])
 
   return (
-    <Layout>
+    <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Real-time Monitoring</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -80,7 +79,7 @@ export default function RealTimeMonitoring() {
           ))}
         </div>
       </div>
-    </Layout>
+    </div>
   )
 }
 

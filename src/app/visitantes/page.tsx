@@ -49,7 +49,7 @@ export default function RegistroVisitantes() {
       if (!response.ok) {
         throw new Error("Erro ao registrar visitante")
       }
-
+// adapte o design usando o codigo a baixo as informacoes que ja temos, crie dois paineis e traduza todo texto para portugues
       const novoVisitante = await response.json()
       setVisitantes([...visitantes, novoVisitante])
       reset()

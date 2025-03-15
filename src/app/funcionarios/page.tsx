@@ -27,7 +27,7 @@ export default function RegistroFuncionarios() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch(`${process.env.BACKEND_URL}/funcionarios`)
+    fetch("https://controlo-de-acesso-backend.vercel.app/api/funcionarios")
       .then((res) => res.json())
       .then((data) => {
         setFuncionarios(data)
@@ -42,14 +42,17 @@ export default function RegistroFuncionarios() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/funcionarios`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          ...data,
-          cargo,
-        }),
-      })
+      const response = await fetch(
+        "https://controlo-de-acesso-backend.vercel.app/api/funcionarios",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...data,
+            cargo,
+          }),
+        }
+      )
 
       if (!response.ok) {
         throw new Error("Erro ao registrar funcionário")

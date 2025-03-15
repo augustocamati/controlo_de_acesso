@@ -25,7 +25,7 @@ export default function RegistroVisitantes() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch(`${process.env.BACKEND_URL}/visistantes`)
+    fetch("https://controlo-de-acesso-backend.vercel.app/api/visitantes")
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
@@ -40,11 +40,14 @@ export default function RegistroVisitantes() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch(`${process.env.BACKEND_URL}/visitantes`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
+      const response = await fetch(
+        "https://controlo-de-acesso-backend.vercel.app/api/visitantes",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      )
 
       if (!response.ok) {
         throw new Error("Erro ao registrar visitante")

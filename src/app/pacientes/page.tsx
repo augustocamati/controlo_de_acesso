@@ -63,7 +63,7 @@ export default function RegistroPacientes() {
   const filteredPacientes = pacientes.filter(
     (paciente) =>
       paciente.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      paciente.numeroQuarto?.toLowerCase().includes(searchTerm.toLowerCase()),
+      paciente.numero_quarto?.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
   return (
@@ -217,9 +217,9 @@ export default function RegistroPacientes() {
                         filteredPacientes.map((paciente) => (
                           <TableRow key={paciente.id} className="hover:bg-gray-50">
                             <TableCell className="font-medium">{paciente.nome}</TableCell>
-                            <TableCell>{paciente.dataNascimento}</TableCell>
-                            <TableCell>{paciente.numeroQuarto}</TableCell>
-                            <TableCell>{paciente.dataAdmissao}</TableCell>
+                            <TableCell>{paciente.data_nascimento}</TableCell>
+                            <TableCell>{paciente.numero_quarto}</TableCell>
+                            <TableCell>{paciente.data_admissao}</TableCell>
                             <TableCell>
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
                                 {paciente.rfid}

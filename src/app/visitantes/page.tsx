@@ -25,7 +25,7 @@ export default function RegistroVisitantes() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch("http://localhost:3000/api/visitantes")
+    fetch(`${process.env.BACKEND_URL}/visistantes`)
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
@@ -40,7 +40,7 @@ export default function RegistroVisitantes() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/api/visitantes", {
+      const response = await fetch(`${process.env.BACKEND_URL}/visitantes`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),

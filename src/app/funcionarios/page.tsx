@@ -27,7 +27,7 @@ export default function RegistroFuncionarios() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch("http://localhost:3000/api/funcionarios")
+    fetch(`${process.env.BACKEND_URL}/funcionarios`)
       .then((res) => res.json())
       .then((data) => {
         setFuncionarios(data)
@@ -42,7 +42,7 @@ export default function RegistroFuncionarios() {
 
   const onSubmit = async (data) => {
     try {
-      const response = await fetch("http://localhost:3000/api/funcionarios", {
+      const response = await fetch(`${process.env.BACKEND_URL}/funcionarios`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

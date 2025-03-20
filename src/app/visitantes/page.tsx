@@ -25,7 +25,7 @@ export default function RegistroVisitantes() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch("https://controlo-de-acesso-backend.vercel.app/api/visitantes")
+    fetch("http://localhost/api/visitantes")
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
@@ -41,7 +41,7 @@ export default function RegistroVisitantes() {
   const onSubmit = async (data) => {
     try {
       const response = await fetch(
-        "https://controlo-de-acesso-backend.vercel.app/api/visitantes",
+        "http://localhost/api/visitantes",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -27,7 +27,7 @@ export default function RegistroFuncionarios() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch("https://controlo-de-acesso-backend.vercel.app/api/funcionarios")
+    fetch("http://localhost/api/funcionarios")
       .then((res) => res.json())
       .then((data) => {
         setFuncionarios(data)
@@ -43,7 +43,7 @@ export default function RegistroFuncionarios() {
   const onSubmit = async (data) => {
     try {
       const response = await fetch(
-        "https://controlo-de-acesso-backend.vercel.app/api/funcionarios",
+        "http://localhost/api/funcionarios",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -6,8 +6,21 @@ import Layout from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
@@ -102,8 +115,10 @@ export default function RegistroFuncionarios() {
     (funcionario) =>
       funcionario.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       funcionario.cargo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.departamento?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.rfid?.toLowerCase().includes(searchTerm.toLowerCase()),
+      funcionario.departamento
+        ?.toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      funcionario.rfid?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   const cargoLabel = (cargo) => {
@@ -119,7 +134,9 @@ export default function RegistroFuncionarios() {
   return (
     <Layout>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Registro de Funcionários</h1>
+        <h1 className="text-2xl font-bold text-gray-800">
+          Registro de Funcionários
+        </h1>
         <div className="flex items-center space-x-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -163,7 +180,11 @@ export default function RegistroFuncionarios() {
                       {...register("nome", { required: true })}
                     />
                   </div>
-                  {errors.nome && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.nome && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -182,7 +203,11 @@ export default function RegistroFuncionarios() {
                       {...register("email", { required: true })}
                     />
                   </div>
-                  {errors.email && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.email && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -200,7 +225,9 @@ export default function RegistroFuncionarios() {
                       <SelectContent>
                         <SelectItem value="medico">Médico</SelectItem>
                         <SelectItem value="enfermeiro">Enfermeiro</SelectItem>
-                        <SelectItem value="limpeza">Equipe de Limpeza</SelectItem>
+                        <SelectItem value="limpeza">
+                          Equipe de Limpeza
+                        </SelectItem>
                         <SelectItem value="seguranca">Segurança</SelectItem>
                       </SelectContent>
                     </Select>
@@ -222,7 +249,11 @@ export default function RegistroFuncionarios() {
                       {...register("departamento", { required: true })}
                     />
                   </div>
-                  {errors.departamento && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.departamento && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -240,11 +271,21 @@ export default function RegistroFuncionarios() {
                       {...register("rfid", { required: true })}
                     />
                   </div>
-                  {errors.rfid && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
-                  <p className="text-xs text-gray-500">Informe o código RFID do cartão do funcionário.</p>
+                  {errors.rfid && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
+                  <p className="text-xs text-gray-500">
+                    Informe o código RFID do cartão do funcionário.
+                  </p>
                 </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -271,7 +312,9 @@ export default function RegistroFuncionarios() {
               {isLoading ? (
                 <div className="flex justify-center items-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                  <span className="ml-2 text-lg text-gray-600">Carregando funcionários...</span>
+                  <span className="ml-2 text-lg text-gray-600">
+                    Carregando funcionários...
+                  </span>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -281,16 +324,25 @@ export default function RegistroFuncionarios() {
                         <TableHead className="font-medium">Nome</TableHead>
                         <TableHead className="font-medium">Email</TableHead>
                         <TableHead className="font-medium">Cargo</TableHead>
-                        <TableHead className="font-medium">Departamento</TableHead>
+                        <TableHead className="font-medium">
+                          Departamento
+                        </TableHead>
                         <TableHead className="font-medium">RFID</TableHead>
-                        <TableHead className="font-medium text-right">Ações</TableHead>
+                        <TableHead className="font-medium text-right">
+                          Ações
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredFuncionarios.length > 0 ? (
                         filteredFuncionarios.map((funcionario) => (
-                          <TableRow key={funcionario.id} className="hover:bg-gray-50">
-                            <TableCell className="font-medium">{funcionario.nome}</TableCell>
+                          <TableRow
+                            key={funcionario.id}
+                            className="hover:bg-gray-50"
+                          >
+                            <TableCell className="font-medium">
+                              {funcionario.nome}
+                            </TableCell>
                             <TableCell>{funcionario.email}</TableCell>
                             <TableCell>
                               <span
@@ -298,10 +350,10 @@ export default function RegistroFuncionarios() {
                                   funcionario.cargo === "medico"
                                     ? "bg-green-100 text-green-800"
                                     : funcionario.cargo === "enfermeiro"
-                                      ? "bg-blue-100 text-blue-800"
-                                      : funcionario.cargo === "limpeza"
-                                        ? "bg-yellow-100 text-yellow-800"
-                                        : "bg-purple-100 text-purple-800"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : funcionario.cargo === "limpeza"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : "bg-purple-100 text-purple-800"
                                 }`}
                               >
                                 {cargoLabel(funcionario.cargo)}
@@ -315,10 +367,18 @@ export default function RegistroFuncionarios() {
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-blue-600"
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-red-600"
+                                >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
@@ -327,7 +387,10 @@ export default function RegistroFuncionarios() {
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                          <TableCell
+                            colSpan={6}
+                            className="text-center py-8 text-gray-500"
+                          >
                             {searchTerm
                               ? "Nenhum funcionário encontrado com os critérios de busca."
                               : "Nenhum funcionário registrado. Adicione um novo funcionário usando o formulário."}
@@ -347,4 +410,3 @@ export default function RegistroFuncionarios() {
     </Layout>
   )
 }
-

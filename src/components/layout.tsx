@@ -275,71 +275,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <h1 className="text-2xl font-bold">HospitalAccess</h1>
           </div>
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div
-                className="cursor-pointer"
-                onClick={() => setShowNotifications(!showNotifications)}
-              >
-                <BellIcon />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full h-5 w-5 flex items-center justify-center text-xs">
-                  3
-                </span>
-              </div>
-              {showNotifications && (
-                <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg z-10 p-2">
-                  <div className="p-2 border-b hover:bg-gray-50 transition-colors rounded-t-md">
-                    <p className="font-semibold">Acesso negado - Sala 302</p>
-                    <p className="text-sm text-gray-600">Há 5 minutos</p>
-                  </div>
-                  <div className="p-2 border-b hover:bg-gray-50 transition-colors">
-                    <p className="font-semibold">Manutenção programada</p>
-                    <p className="text-sm text-gray-600">Hoje, 15:00</p>
-                  </div>
-                  <div className="p-2 hover:bg-gray-50 transition-colors rounded-b-md">
-                    <p className="font-semibold">Novo usuário registrado</p>
-                    <p className="text-sm text-gray-600">Ontem, 14:25</p>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="relative">
-              <div
-                className="flex items-center space-x-2 cursor-pointer"
-                onClick={() => setShowUserMenu(!showUserMenu)}
-              >
-                <img
-                  src="https://randomuser.me/api/portraits/women/44.jpg"
-                  alt="User"
-                  className="h-8 w-8 rounded-full border-2 border-white"
-                />
-                <span className="font-medium">Dra. Carla Silva</span>
-                <ChevronDownIcon />
-              </div>
-              {showUserMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
-                  <Link
-                    href="#profile"
-                    className="block px-4 py-2 text-gray-800 hover:bg-blue-100 rounded-t-md transition-colors"
-                  >
-                    <UserIcon /> <span className="ml-2">Perfil</span>
-                  </Link>
-                  <Link
-                    href="/configuracoes"
-                    className="block px-4 py-2 text-gray-800 hover:bg-blue-100 transition-colors"
-                  >
-                    <SettingsIcon /> <span className="ml-2">Configurações</span>
-                  </Link>
-                  <Link
-                    href="/login"
-                    className="block px-4 py-2 text-gray-800 hover:bg-blue-100 rounded-b-md transition-colors"
-                  >
-                    <LogOutIcon /> <span className="ml-2">Sair</span>
-                  </Link>
-                </div>
-              )}
-            </div>
-          </div>
+          
         </div>
       </header>
 

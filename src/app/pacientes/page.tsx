@@ -72,7 +72,9 @@ export default function RegistroPacientes() {
   return (
     <Layout>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Registro de Pacientes</h1>
+        <h1 className="text-2xl font-bold text-gray-800">
+          Registro de Pacientes
+        </h1>
         <div className="flex items-center space-x-2">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -116,11 +118,18 @@ export default function RegistroPacientes() {
                       {...register("nome", { required: true })}
                     />
                   </div>
-                  {errors.nome && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.nome && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="dataNascimento" className="text-sm font-medium">
+                  <Label
+                    htmlFor="dataNascimento"
+                    className="text-sm font-medium"
+                  >
                     Data de Nascimento
                   </Label>
                   <div className="relative">
@@ -134,7 +143,11 @@ export default function RegistroPacientes() {
                       {...register("dataNascimento", { required: true })}
                     />
                   </div>
-                  {errors.dataNascimento && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.dataNascimento && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -152,7 +165,11 @@ export default function RegistroPacientes() {
                       {...register("numeroQuarto", { required: true })}
                     />
                   </div>
-                  {errors.numeroQuarto && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.numeroQuarto && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
                 <div className="space-y-2">
@@ -170,10 +187,18 @@ export default function RegistroPacientes() {
                       {...register("dataAdmissao", { required: true })}
                     />
                   </div>
-                  {errors.dataAdmissao && <span className="text-red-500 text-xs">Este campo é obrigatório</span>}
+                  {errors.dataAdmissao && (
+                    <span className="text-red-500 text-xs">
+                      Este campo é obrigatório
+                    </span>
+                  )}
                 </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700" disabled={isSubmitting}>
+                <Button
+                  type="submit"
+                  className="w-full bg-blue-600 hover:bg-blue-700"
+                  disabled={isSubmitting}
+                >
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -200,7 +225,9 @@ export default function RegistroPacientes() {
               {isLoading ? (
                 <div className="flex justify-center items-center py-12">
                   <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                  <span className="ml-2 text-lg text-gray-600">Carregando pacientes...</span>
+                  <span className="ml-2 text-lg text-gray-600">
+                    Carregando pacientes...
+                  </span>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -208,32 +235,53 @@ export default function RegistroPacientes() {
                     <TableHeader className="bg-gray-50">
                       <TableRow>
                         <TableHead className="font-medium">Nome</TableHead>
-                        <TableHead className="font-medium">Data de Nascimento</TableHead>
+                        <TableHead className="font-medium">
+                          Data de Nascimento
+                        </TableHead>
                         <TableHead className="font-medium">Quarto</TableHead>
-                        <TableHead className="font-medium">Data de Admissão</TableHead>
-                        <TableHead className="font-medium">RFID</TableHead>
-                        <TableHead className="font-medium text-right">Ações</TableHead>
+                        <TableHead className="font-medium">
+                          Contacto de Emergencia
+                        </TableHead>
+                        <TableHead className="font-medium">
+                          Observações
+                        </TableHead>
+                        <TableHead className="font-medium text-right">
+                          Ações
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredPacientes.length > 0 ? (
                         filteredPacientes.map((paciente) => (
-                          <TableRow key={paciente.id} className="hover:bg-gray-50">
-                            <TableCell className="font-medium">{paciente.nome}</TableCell>
-                            <TableCell>{paciente.data_nascimento}</TableCell>
-                            <TableCell>{paciente.numero_quarto}</TableCell>
-                            <TableCell>{paciente.data_admissao}</TableCell>
+                          <TableRow
+                            key={paciente.id}
+                            className="hover:bg-gray-50"
+                          >
+                            <TableCell className="font-medium">
+                              {paciente.nome}
+                            </TableCell>
+                            <TableCell>{paciente.dataNascimento}</TableCell>
+                            <TableCell>{paciente.numeroQuarto}</TableCell>
+                            <TableCell>{paciente.numeroQuarto}</TableCell>
                             <TableCell>
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                {paciente.rfid}
+                                {paciente.observacoes}
                               </span>
                             </TableCell>
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-blue-600">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-blue-600"
+                                >
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button variant="ghost" size="icon" className="h-8 w-8 text-red-600">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8 text-red-600"
+                                >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>
                               </div>
@@ -242,7 +290,10 @@ export default function RegistroPacientes() {
                         ))
                       ) : (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                          <TableCell
+                            colSpan={6}
+                            className="text-center py-8 text-gray-500"
+                          >
                             {searchTerm
                               ? "Nenhum paciente encontrado com os critérios de busca."
                               : "Nenhum paciente registrado. Adicione um novo paciente usando o formulário."}

@@ -75,6 +75,33 @@ export default function RegistroPacientes() {
       paciente.numero_quarto?.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
+
+
+  async function handleDelete(id: any): Promise<void> {
+    if (!window.confirm("Tem certeza que deseja excluir este paciente?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://controlo-de-acesso-backend.vercel.app/api/pacientes/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir paciente");
+      }
+
+      setPacientes(pacientes.filter((paciente) => paciente.id !== id));
+      toast.success("Paciente excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir paciente:", error);
+      toast.error("Erro ao excluir paciente");
+    }
+  }
+
   return (
     <Layout>
       <div className="flex justify-between items-center mb-6">
@@ -240,9 +267,9 @@ export default function RegistroPacientes() {
                           Data de Nascimento
                         </TableHead>
                         <TableHead className="font-medium">Quarto</TableHead>
-                        <TableHead className="font-medium">
+                        {/* <TableHead className="font-medium">
                           Contacto de Emergencia
-                        </TableHead>
+                        </TableHead> */}
                         <TableHead className="font-medium">
                           Observações
                         </TableHead>
@@ -261,9 +288,13 @@ export default function RegistroPacientes() {
                             <TableCell className="font-medium">
                               {paciente.nome}
                             </TableCell>
-                            <TableCell>{paciente.dataNascimento}</TableCell>
+                            <TableCell>
+                              {new Date(
+                                paciente.dataNascimento
+                              ).toLocaleDateString()}
+                            </TableCell>
                             <TableCell>{paciente.numeroQuarto}</TableCell>
-                            <TableCell>{paciente.numeroQuarto}</TableCell>
+                            {/* <TableCell>{paciente.numeroQuarto}</TableCell> */}
                             <TableCell>
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
                                 {paciente.observacoes}
@@ -282,6 +313,7 @@ export default function RegistroPacientes() {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-red-600"
+                                  onClick={() => handleDelete(paciente.id)}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>

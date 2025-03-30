@@ -29,6 +29,7 @@ import {
 export default function Permissoes() {
   const [permissoes, setPermissoes] = useState([])
   const [salas, setSalas] = useState([])
+  const [usuarios, setUsuarios] = useState([])
   const [quartos, setQuartos] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
@@ -41,17 +42,32 @@ export default function Permissoes() {
     status: "ativo",
   })
 
+  useEffect(() => {
+    // Carregar dados da API
+    fetch("https://controlo-de-acesso-backend.vercel.app/api/permissoes")
+      .then((res) => res.json())
+      .then((data) => {
+        setPermissoes(data)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar permissoes:", error)
+        toast.error("Erro ao carregar dados dos permissoes")
+        setIsLoading(false)
+      })
+  }, [])
+
   // Dados simulados para salas do hospital
-  const salasHospital = [
-    { id: 1, nome: "Recepção", nivel: "Público" },
-    { id: 2, nome: "Enfermaria", nivel: "Restrito" },
-    { id: 3, nome: "UTI", nivel: "Altamente Restrito" },
-    { id: 4, nome: "Centro Cirúrgico", nivel: "Altamente Restrito" },
-    { id: 5, nome: "Farmácia", nivel: "Restrito" },
-    { id: 6, nome: "Laboratório", nivel: "Restrito" },
-    { id: 7, nome: "Administração", nivel: "Restrito" },
-    { id: 8, nome: "Refeitório", nivel: "Público" },
-  ]
+  // const salasHospital = [
+  //   { id: 1, nome: "Recepção", nivel: "Público" },
+  //   { id: 2, nome: "Enfermaria", nivel: "Restrito" },
+  //   { id: 3, nome: "UTI", nivel: "Altamente Restrito" },
+  //   { id: 4, nome: "Centro Cirúrgico", nivel: "Altamente Restrito" },
+  //   { id: 5, nome: "Farmácia", nivel: "Restrito" },
+  //   { id: 6, nome: "Laboratório", nivel: "Restrito" },
+  //   { id: 7, nome: "Administração", nivel: "Restrito" },
+  //   { id: 8, nome: "Refeitório", nivel: "Público" },
+  // ]
 
   // Dados simulados para quartos do hospital
   const quartosHospital = [
@@ -66,82 +82,82 @@ export default function Permissoes() {
   ]
 
   // Dados simulados para usuários
-  const usuarios = [
-    {
-      id: 1,
-      nome: "Dr. Roberto Silva",
-      cargo: "Médico",
-      rfid: "RFID-MED-1234",
-    },
-    {
-      id: 2,
-      nome: "Enf. Ana Oliveira",
-      cargo: "Enfermeiro",
-      rfid: "RFID-ENF-5678",
-    },
-    { id: 3, nome: "José Santos", cargo: "Segurança", rfid: "RFID-SEG-9012" },
-    { id: 4, nome: "Maria Souza", cargo: "Limpeza", rfid: "RFID-LIM-3456" },
-    { id: 5, nome: "Carlos Mendes", cargo: "Visitante", rfid: "RFID-VIS-7890" },
-  ]
+  // const usuarios = [
+  //   {
+  //     id: 1,
+  //     nome: "Dr. Roberto Silva",
+  //     cargo: "Médico",
+  //     rfid: "RFID-MED-1234",
+  //   },
+  //   {
+  //     id: 2,
+  //     nome: "Enf. Ana Oliveira",
+  //     cargo: "Enfermeiro",
+  //     rfid: "RFID-ENF-5678",
+  //   },
+  //   { id: 3, nome: "José Santos", cargo: "Segurança", rfid: "RFID-SEG-9012" },
+  //   { id: 4, nome: "Maria Souza", cargo: "Limpeza", rfid: "RFID-LIM-3456" },
+  //   { id: 5, nome: "Carlos Mendes", cargo: "Visitante", rfid: "RFID-VIS-7890" },
+  // ]
 
   // Dados simulados para permissões
-  const permissoesSimuladas = [
-    {
-      id: 1,
-      usuario: "Dr. Roberto Silva",
-      cargo: "Médico",
-      salas: ["UTI", "Centro Cirúrgico", "Enfermaria"],
-      quarto: "101",
-      rfid: "RFID-MED-1234",
-      status: "ativo",
-    },
-    {
-      id: 2,
-      usuario: "Enf. Ana Oliveira",
-      cargo: "Enfermeiro",
-      salas: ["Enfermaria", "Farmácia"],
-      quarto: "102",
-      rfid: "RFID-ENF-5678",
-      status: "ativo",
-    },
-    {
-      id: 3,
-      usuario: "José Santos",
-      cargo: "Segurança",
-      salas: ["Recepção", "Refeitório", "Administração"],
-      quarto: "Todos",
-      rfid: "RFID-SEG-9012",
-      status: "ativo",
-    },
-    {
-      id: 4,
-      usuario: "Maria Souza",
-      cargo: "Limpeza",
-      salas: ["Centro Cirúrgico", "Enfermaria", "Laboratório"],
-      quarto: "201",
-      rfid: "RFID-LIM-3456",
-      status: "inativo",
-    },
-    {
-      id: 5,
-      usuario: "Carlos Mendes",
-      cargo: "Visitante",
-      salas: ["Enfermaria", "Refeitório"],
-      quarto: "302",
-      rfid: "RFID-VIS-7890",
-      status: "ativo",
-    },
-  ]
+  // const permissoesSimuladas = [
+  //   {
+  //     id: 1,
+  //     usuario: "Dr. Roberto Silva",
+  //     cargo: "Médico",
+  //     salas: ["UTI", "Centro Cirúrgico", "Enfermaria"],
+  //     quarto: "101",
+  //     rfid: "RFID-MED-1234",
+  //     status: "ativo",
+  //   },
+  //   {
+  //     id: 2,
+  //     usuario: "Enf. Ana Oliveira",
+  //     cargo: "Enfermeiro",
+  //     salas: ["Enfermaria", "Farmácia"],
+  //     quarto: "102",
+  //     rfid: "RFID-ENF-5678",
+  //     status: "ativo",
+  //   },
+  //   {
+  //     id: 3,
+  //     usuario: "José Santos",
+  //     cargo: "Segurança",
+  //     salas: ["Recepção", "Refeitório", "Administração"],
+  //     quarto: "Todos",
+  //     rfid: "RFID-SEG-9012",
+  //     status: "ativo",
+  //   },
+  //   {
+  //     id: 4,
+  //     usuario: "Maria Souza",
+  //     cargo: "Limpeza",
+  //     salas: ["Centro Cirúrgico", "Enfermaria", "Laboratório"],
+  //     quarto: "201",
+  //     rfid: "RFID-LIM-3456",
+  //     status: "inativo",
+  //   },
+  //   {
+  //     id: 5,
+  //     usuario: "Carlos Mendes",
+  //     cargo: "Visitante",
+  //     salas: ["Enfermaria", "Refeitório"],
+  //     quarto: "302",
+  //     rfid: "RFID-VIS-7890",
+  //     status: "ativo",
+  //   },
+  // ]
 
-  useEffect(() => {
-    // Simulando carregamento de dados da API
-    setTimeout(() => {
-      setPermissoes(permissoesSimuladas)
-      setSalas(salasHospital)
-      setQuartos(quartosHospital)
-      setIsLoading(false)
-    }, 1000)
-  }, [])
+  // useEffect(() => {
+  //   // Simulando carregamento de dados da API
+  //   setTimeout(() => {
+  //     // setPermissoes(permissoesSimuladas)
+  //     setSalas(salasHospital)
+  //     setQuartos(quartosHospital)
+  //     setIsLoading(false)
+  //   }, 1000)
+  // }, [])
 
   const handleInputChange = (field, value) => {
     setNovaPermissao({
@@ -247,13 +263,72 @@ export default function Permissoes() {
     )
   }
 
-  const excluirPermissao = (id) => {
-    if (window.confirm("Tem certeza que deseja excluir esta permissão?")) {
-      const permissoesAtualizadas = permissoes.filter(
-        (permissao) => permissao.id !== id
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log("entrou")
+      try {
+        const [funcionariosRes, visitantesRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/funcionarios`).then((res) =>
+            res.json()
+          ),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL}/visitantes`).then((res) =>
+            res.json()
+          ),
+          // fetch(`${process.env.NEXT_PUBLIC_API_URL}/quartos`).then((res) =>
+          //   res.json()
+          // ),
+        ])
+        const usuariosFormatados = [
+          ...funcionariosRes.map((f) => ({
+            id: `func_${f.id}`,
+            nome: f.nome,
+            tipo: "Funcionário",
+            // rfid: f.rfid,
+          })),
+          ...visitantesRes.map((v) => ({
+            id: `visit_${v.id}`,
+            nome: v.nome,
+            tipo: "Visitante",
+            // rfid: v.rfid,
+          })),
+        ]
+
+        setUsuarios(usuariosFormatados)
+        console.log("funcionariosRes", funcionariosRes)
+        console.log("visitantesRes", visitantesRes)
+        console.log("usuariosFormatados", usuariosFormatados)
+
+        // setQuartos(quartosRes)
+      } catch (error) {
+        console.error("Erro ao buscar dados:", error)
+      }
+    }
+
+    fetchData()
+  }, []) // Executa apenas uma vez ao montar o componente
+
+  async function handleDelete(id: any): Promise<void> {
+    if (!window.confirm("Tem certeza que deseja excluir essa permissão?")) {
+      return
+    }
+
+    try {
+      const response = await fetch(
+        `https://controlo-de-acesso-backend.vercel.app/api/permissoes/${id}`,
+        {
+          method: "DELETE",
+        }
       )
-      setPermissoes(permissoesAtualizadas)
-      toast.success("Permissão excluída com sucesso!")
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir permissão")
+      }
+
+      setPermissoes(permissoes.filter((permissoe) => permissoe.id !== id))
+      toast.success("permissão excluído com sucesso!")
+    } catch (error) {
+      console.error("Erro ao excluir permissão:", error)
+      toast.error("Erro ao excluir permissão")
     }
   }
 
@@ -316,7 +391,7 @@ export default function Permissoes() {
                     <SelectContent>
                       {usuarios.map((usuario) => (
                         <SelectItem key={usuario.id} value={usuario.nome}>
-                          {usuario.nome} ({usuario.cargo})
+                          {usuario.nome} ({usuario.tipo})
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -528,7 +603,7 @@ export default function Permissoes() {
                                 variant="ghost"
                                 size="sm"
                                 className="h-8 text-red-600 hover:text-red-800 hover:bg-red-50"
-                                onClick={() => excluirPermissao(permissao.id)}
+                                onClick={() => handleDelete(permissao.id)}
                               >
                                 Excluir
                               </Button>

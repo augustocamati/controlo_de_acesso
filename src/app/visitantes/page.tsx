@@ -74,7 +74,7 @@ export default function RegistroVisitantes() {
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
-        console.log("busca", JSON.stringify(data))
+    
         setIsLoading(false)
       })
       .catch((error) => {
@@ -87,7 +87,7 @@ export default function RegistroVisitantes() {
   const onSubmit = async (data) => {
     const novadata = {
       ...data,
-      pacienteId,
+      pacienteId: Number(pacienteId),
     }
     console.log("data", JSON.stringify(novadata))
     try {
@@ -106,6 +106,7 @@ export default function RegistroVisitantes() {
       }
 
       const novovisitante = await response.json()
+      console.log("novo visitante", novovisitante)
       setVisitantes([...visitantes, novovisitante])
       reset()
       toast.success("visitante registrado com sucesso!")
@@ -122,6 +123,33 @@ export default function RegistroVisitantes() {
       visitante.paciente.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       visitante.rfid?.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
+  async function handleDelete(id: number): Promise<void> {
+    if (!window.confirm("Tem certeza que deseja excluir este visitante?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://controlo-de-acesso-backend.vercel.app/api/visitantes/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir visitante");
+      }
+
+      setVisitantes((prevVisitantes) =>
+        prevVisitantes.filter((visitante) => visitante.id !== id)
+      );
+      toast.success("Visitante excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir visitante:", error);
+      toast.error("Erro ao excluir visitante");
+    }
+  }
 
   return (
     <Layout>
@@ -202,10 +230,7 @@ export default function RegistroVisitantes() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label
-                    htmlFor="motivo_visita"
-                    className="text-sm font-medium"
-                  >
+                  <Label htmlFor="motivoVisita" className="text-sm font-medium">
                     Motivo da Visita
                   </Label>
                   <div className="relative">
@@ -213,10 +238,10 @@ export default function RegistroVisitantes() {
                       <FileText className="h-4 w-4 text-gray-400" />
                     </div>
                     <Input
-                      id="motivo_visita"
+                      id="motivoVisita"
                       className="pl-9"
                       placeholder="Ex: Visita familiar"
-                      {...register("motivo_visita", { required: true })}
+                      {...register("motivoVisita", { required: true })}
                     />
                   </div>
                   {errors.motivo_visita && (
@@ -256,8 +281,6 @@ export default function RegistroVisitantes() {
                     </span>
                   )}
                 </div>
-
-                
 
                 <Button
                   type="submit"
@@ -303,7 +326,7 @@ export default function RegistroVisitantes() {
                         <TableHead className="font-medium">BI</TableHead>
                         <TableHead className="font-medium">Motivo</TableHead>
                         <TableHead className="font-medium">Paciente</TableHead>
-                      
+
                         <TableHead className="font-medium text-right">
                           Ações
                         </TableHead>
@@ -322,8 +345,7 @@ export default function RegistroVisitantes() {
                             <TableCell>{visitante.bi}</TableCell>
                             <TableCell>{visitante.motivoVisita}</TableCell>
                             <TableCell>{visitante.paciente.nome}</TableCell>
-                          
-                           
+
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
                                 <Button
@@ -337,6 +359,7 @@ export default function RegistroVisitantes() {
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-red-600"
+                                  onClick={() => handleDelete(visitante.id)}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>

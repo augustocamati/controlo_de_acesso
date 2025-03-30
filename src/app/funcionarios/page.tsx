@@ -50,74 +50,59 @@ export default function RegistroFuncionarios() {
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(true)
 
-  useEffect(() => {
-    // Simular carregamento de dados da API
-    setTimeout(() => {
-      // Dados simulados para desenvolvimento
-      const dadosSimulados = [
-        {
-          id: 1,
-          nome: "Dr. Roberto Silva",
-          email: "roberto.silva@hospital.med",
-          cargo: "medico",
-          departamento: "Cardiologia",
-          rfid: "RFID-MED-1234",
-        },
-        {
-          id: 2,
-          nome: "Enf. Ana Oliveira",
-          email: "ana.oliveira@hospital.med",
-          cargo: "enfermeiro",
-          departamento: "Emergência",
-          rfid: "RFID-ENF-5678",
-        },
-        {
-          id: 3,
-          nome: "José Santos",
-          email: "jose.santos@hospital.med",
-          cargo: "seguranca",
-          departamento: "Segurança",
-          rfid: "RFID-SEG-9012",
-        },
-      ]
+ 
 
-      setFuncionarios(dadosSimulados)
-      setIsLoading(false)
-    }, 1000)
-  }, [])
+    useEffect(() => {
+      // Carregar dados da API
+      fetch("https://controlo-de-acesso-backend.vercel.app/api/funcionarios")
+        .then((res) => res.json())
+        .then((data) => {
+          setFuncionarios(data)
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar funcionarios:", error)
+          toast.error("Erro ao carregar dados dos funcionarios")
+          setIsLoading(false)
+        })
+    }, [])
+
 
   const onSubmit = async (data) => {
-    try {
-      // Verificar se o RFID foi informado
-      if (!data.rfid) {
-        toast.error("Por favor, informe o código RFID do cartão")
-        return
-      }
-
-      // Simular envio para API
-      const novoFuncionario = {
-        id: Date.now(),
-        ...data,
-        cargo,
-      }
-
-      setFuncionarios([...funcionarios, novoFuncionario])
-      reset()
-      setCargo("")
-      toast.success("Funcionário registrado com sucesso!")
-    } catch (error) {
-      console.error("Erro ao registrar funcionário:", error)
-      toast.error("Erro ao registrar funcionário")
+    const novadata= {
+      ...data,
+      cargo
     }
+   console.log("data", JSON.stringify(novadata))
+   try {
+     const response = await fetch(
+       "https://controlo-de-acesso-backend.vercel.app/api/funcionarios",
+       {
+         method: "POST",
+         headers: { "Content-Type": "application/json" },
+         body: JSON.stringify(novadata),
+       }
+     )
+
+     if (!response.ok) {
+       console.log("response", response)
+       throw new Error("Erro ao registrar funcionario")
+     }
+
+     const novofuncionario = await response.json()
+     setFuncionarios([...funcionarios, novofuncionario])
+     reset()
+     toast.success("funcionario registrado com sucesso!")
+   } catch (error) {
+     console.error("Erro ao registrar funcionario:", error)
+     toast.error("Erro ao registrar funcionario")
+   }
   }
 
   const filteredFuncionarios = funcionarios.filter(
     (funcionario) =>
       funcionario.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       funcionario.cargo?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      funcionario.departamento
-        ?.toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
       funcionario.rfid?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -234,28 +219,7 @@ export default function RegistroFuncionarios() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="departamento" className="text-sm font-medium">
-                    Departamento
-                  </Label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Building className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="departamento"
-                      className="pl-9"
-                      placeholder="Ex: Cardiologia"
-                      {...register("departamento", { required: true })}
-                    />
-                  </div>
-                  {errors.departamento && (
-                    <span className="text-red-500 text-xs">
-                      Este campo é obrigatório
-                    </span>
-                  )}
-                </div>
-
+           
                 <div className="space-y-2">
                   <Label htmlFor="rfid" className="text-sm font-medium">
                     Cartão RFID
@@ -324,9 +288,7 @@ export default function RegistroFuncionarios() {
                         <TableHead className="font-medium">Nome</TableHead>
                         <TableHead className="font-medium">Email</TableHead>
                         <TableHead className="font-medium">Cargo</TableHead>
-                        <TableHead className="font-medium">
-                          Departamento
-                        </TableHead>
+                        
                         <TableHead className="font-medium">RFID</TableHead>
                         <TableHead className="font-medium text-right">
                           Ações
@@ -359,7 +321,7 @@ export default function RegistroFuncionarios() {
                                 {cargoLabel(funcionario.cargo)}
                               </span>
                             </TableCell>
-                            <TableCell>{funcionario.departamento}</TableCell>
+                           
                             <TableCell>
                               <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
                                 {funcionario.rfid}

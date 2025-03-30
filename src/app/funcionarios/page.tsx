@@ -116,6 +116,31 @@ export default function RegistroFuncionarios() {
     return labels[cargo] || cargo
   }
 
+  async function handleDelete(id: any): Promise<void> {
+    if (!window.confirm("Tem certeza que deseja excluir este funcionário?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `https://controlo-de-acesso-backend.vercel.app/api/funcionarios/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Erro ao excluir funcionário");
+      }
+
+      setFuncionarios(funcionarios.filter((funcionario) => funcionario.id !== id));
+      toast.success("Funcionário excluído com sucesso!");
+    } catch (error) {
+      console.error("Erro ao excluir funcionário:", error);
+      toast.error("Erro ao excluir funcionário");
+    }
+  }
+
   return (
     <Layout>
       <div className="flex justify-between items-center mb-6">
@@ -219,32 +244,6 @@ export default function RegistroFuncionarios() {
                   </div>
                 </div>
 
-           
-                <div className="space-y-2">
-                  <Label htmlFor="rfid" className="text-sm font-medium">
-                    Cartão RFID
-                  </Label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <CreditCard className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="rfid"
-                      className="pl-9"
-                      placeholder="Código RFID do cartão"
-                      {...register("rfid", { required: true })}
-                    />
-                  </div>
-                  {errors.rfid && (
-                    <span className="text-red-500 text-xs">
-                      Este campo é obrigatório
-                    </span>
-                  )}
-                  <p className="text-xs text-gray-500">
-                    Informe o código RFID do cartão do funcionário.
-                  </p>
-                </div>
-
                 <Button
                   type="submit"
                   className="w-full bg-blue-600 hover:bg-blue-700"
@@ -288,8 +287,7 @@ export default function RegistroFuncionarios() {
                         <TableHead className="font-medium">Nome</TableHead>
                         <TableHead className="font-medium">Email</TableHead>
                         <TableHead className="font-medium">Cargo</TableHead>
-                        
-                        <TableHead className="font-medium">RFID</TableHead>
+
                         <TableHead className="font-medium text-right">
                           Ações
                         </TableHead>
@@ -321,25 +319,21 @@ export default function RegistroFuncionarios() {
                                 {cargoLabel(funcionario.cargo)}
                               </span>
                             </TableCell>
-                           
-                            <TableCell>
-                              <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
-                                {funcionario.rfid}
-                              </span>
-                            </TableCell>
+
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
-                                <Button
+                                {/* <Button
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-blue-600"
                                 >
                                   <Edit className="h-4 w-4" />
-                                </Button>
+                                </Button> */}
                                 <Button
                                   variant="ghost"
                                   size="icon"
                                   className="h-8 w-8 text-red-600"
+                                  onClick={() => handleDelete(funcionario.id)}
                                 >
                                   <Trash2 className="h-4 w-4" />
                                 </Button>

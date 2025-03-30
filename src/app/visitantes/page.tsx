@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import {
   Table,
   TableBody,
   TableCell,
@@ -41,74 +48,78 @@ export default function RegistroVisitantes() {
   const [visitantes, setVisitantes] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+    const [pacientes, setPacientes] = useState([])
+    const [pacienteId, setPacienteId] = useState("")
+
+    
 
   useEffect(() => {
-    // Simular carregamento de dados da API
-    setTimeout(() => {
-      // Dados simulados para desenvolvimento
-      const dadosSimulados = [
-        {
-          id: 1,
-          nome: "Carlos Mendes",
-          bi: "12345678-9",
-          motivo_visita: "Visita familiar",
-          paciente_id: "Maria Silva",
-          created_at: "2023-06-20T14:30:00Z",
-          rfid: "RFID-VIS-1234",
-        },
-        {
-          id: 2,
-          nome: "Fernanda Costa",
-          bi: "98765432-1",
-          motivo_visita: "Entrega de documentos",
-          paciente_id: "João Santos",
-          created_at: "2023-06-20T15:45:00Z",
-          rfid: "RFID-VIS-5678",
-        },
-        {
-          id: 3,
-          nome: "Ricardo Almeida",
-          bi: "45678912-3",
-          motivo_visita: "Visita familiar",
-          paciente_id: "Ana Oliveira",
-          created_at: "2023-06-20T16:20:00Z",
-          rfid: "RFID-VIS-9012",
-        },
-      ]
-
-      setVisitantes(dadosSimulados)
-      setIsLoading(false)
-    }, 1000)
+    // Carregar dados da API
+    fetch("https://controlo-de-acesso-backend.vercel.app/api/pacientes")
+      .then((res) => res.json())
+      .then((data) => {
+        setPacientes(data)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar pacientes:", error)
+        toast.error("Erro ao carregar dados dos pacientes")
+        setIsLoading(false)
+      })
+  }, [])
+  
+  useEffect(() => {
+    // Carregar dados da API
+    fetch("https://controlo-de-acesso-backend.vercel.app/api/visitantes")
+      .then((res) => res.json())
+      .then((data) => {
+        setVisitantes(data)
+        console.log("busca", JSON.stringify(data))
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar visitantes:", error)
+        toast.error("Erro ao carregar dados dos visitantes")
+        setIsLoading(false)
+      })
   }, [])
 
   const onSubmit = async (data) => {
+    const novadata = {
+      ...data,
+      pacienteId,
+    }
+    console.log("data", JSON.stringify(novadata))
     try {
-      // Verificar se o RFID foi informado
-      if (!data.rfid) {
-        toast.error("Por favor, informe o código RFID do cartão temporário")
-        return
+      const response = await fetch(
+        "https://controlo-de-acesso-backend.vercel.app/api/visitantes",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(novadata),
+        }
+      )
+
+      if (!response.ok) {
+        console.log("response", response)
+        throw new Error("Erro ao registrar visitante")
       }
 
-      // Simular envio para API
-      const novoVisitante = {
-        id: Date.now(),
-        ...data,
-        created_at: new Date().toISOString(),
-      }
-
-      setVisitantes([...visitantes, novoVisitante])
+      const novovisitante = await response.json()
+      setVisitantes([...visitantes, novovisitante])
       reset()
-      toast.success("Visitante registrado com sucesso!")
+      toast.success("visitante registrado com sucesso!")
     } catch (error) {
       console.error("Erro ao registrar visitante:", error)
       toast.error("Erro ao registrar visitante")
     }
   }
 
+
   const filteredVisitantes = visitantes.filter(
     (visitante) =>
       visitante.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      visitante.paciente_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      visitante.paciente.nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       visitante.rfid?.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
@@ -223,12 +234,21 @@ export default function RegistroVisitantes() {
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                       <Users className="h-4 w-4 text-gray-400" />
                     </div>
-                    <Input
-                      id="paciente_id"
-                      className="pl-9"
-                      placeholder="Nome do paciente"
-                      {...register("paciente_id", { required: true })}
-                    />
+                    <Select value={pacienteId} onValueChange={setPacienteId}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione o paciente" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {pacientes.map((paciente) => (
+                          <SelectItem
+                            key={paciente.id}
+                            value={paciente.id.toString()}
+                          >
+                            {paciente.nome} - Quarto {paciente.numeroQuarto}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                   {errors.paciente_id && (
                     <span className="text-red-500 text-xs">
@@ -237,30 +257,7 @@ export default function RegistroVisitantes() {
                   )}
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="rfid" className="text-sm font-medium">
-                    Cartão RFID Temporário
-                  </Label>
-                  <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <CreditCard className="h-4 w-4 text-gray-400" />
-                    </div>
-                    <Input
-                      id="rfid"
-                      className="pl-9"
-                      placeholder="Código RFID do cartão temporário"
-                      {...register("rfid", { required: true })}
-                    />
-                  </div>
-                  {errors.rfid && (
-                    <span className="text-red-500 text-xs">
-                      Este campo é obrigatório
-                    </span>
-                  )}
-                  <p className="text-xs text-gray-500">
-                    Informe o código RFID do cartão temporário do visitante.
-                  </p>
-                </div>
+                
 
                 <Button
                   type="submit"
@@ -306,8 +303,7 @@ export default function RegistroVisitantes() {
                         <TableHead className="font-medium">BI</TableHead>
                         <TableHead className="font-medium">Motivo</TableHead>
                         <TableHead className="font-medium">Paciente</TableHead>
-                        <TableHead className="font-medium">RFID</TableHead>
-                        <TableHead className="font-medium">Entrada</TableHead>
+                      
                         <TableHead className="font-medium text-right">
                           Ações
                         </TableHead>
@@ -324,23 +320,10 @@ export default function RegistroVisitantes() {
                               {visitante.nome}
                             </TableCell>
                             <TableCell>{visitante.bi}</TableCell>
-                            <TableCell>{visitante.motivo_visita}</TableCell>
-                            <TableCell>{visitante.paciente_id}</TableCell>
-                            <TableCell>
-                              <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
-                                {visitante.rfid}
-                              </span>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center">
-                                <Clock className="h-3 w-3 text-gray-400 mr-1" />
-                                <span className="text-sm">
-                                  {new Date(
-                                    visitante.created_at
-                                  ).toLocaleString()}
-                                </span>
-                              </div>
-                            </TableCell>
+                            <TableCell>{visitante.motivoVisita}</TableCell>
+                            <TableCell>{visitante.paciente.nome}</TableCell>
+                          
+                           
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
                                 <Button

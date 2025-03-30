@@ -39,6 +39,7 @@ export default function RegistroPacientes() {
   }, [])
 
   const onSubmit = async (data) => {
+    console.log("data", JSON.stringify(data))
     try {
       const response = await fetch(
         "https://controlo-de-acesso-backend.vercel.app/api/pacientes",
@@ -50,6 +51,7 @@ export default function RegistroPacientes() {
       )
 
       if (!response.ok) {
+        console.log('response', response)
         throw new Error("Erro ao registrar paciente")
       }
 
@@ -85,10 +87,6 @@ export default function RegistroPacientes() {
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">
-            <Download className="h-4 w-4 mr-2" />
-            Exportar
-          </Button>
         </div>
       </div>
 
@@ -171,23 +169,22 @@ export default function RegistroPacientes() {
                     </span>
                   )}
                 </div>
-
                 <div className="space-y-2">
-                  <Label htmlFor="dataAdmissao" className="text-sm font-medium">
-                    Data de Admissão
+                  <Label htmlFor="observacoes" className="text-sm font-medium">
+                    Observações
                   </Label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Clock className="h-4 w-4 text-gray-400" />
+                      <Home className="h-4 w-4 text-gray-400" />
                     </div>
                     <Input
-                      id="dataAdmissao"
-                      type="date"
+                      id="observacoes"
                       className="pl-9"
-                      {...register("dataAdmissao", { required: true })}
+                      placeholder="Ex: paciente sob observação"
+                      {...register("observacoes", { required: true })}
                     />
                   </div>
-                  {errors.dataAdmissao && (
+                  {errors.observacoes && (
                     <span className="text-red-500 text-xs">
                       Este campo é obrigatório
                     </span>

@@ -39,14 +39,18 @@ export default function RegistroPacientes() {
   }, [])
 
   const onSubmit = async (data) => {
-    console.log("data", JSON.stringify(data))
+    const pacienteData = {
+      ...data,
+      dataNascimento:`${data.dataNascimento}T14:00:00z` 
+    }
+    console.log("data", JSON.stringify(pacienteData))
     try {
       const response = await fetch(
         "https://controlo-de-acesso-backend.vercel.app/api/pacientes",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+          body: JSON.stringify(pacienteData),
         }
       )
 

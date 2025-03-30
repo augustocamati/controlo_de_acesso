@@ -106,7 +106,7 @@ export default function RegistroVisitantes() {
       }
 
       const novovisitante = await response.json()
-      console.log("novo visitante", novovisitante)
+  
       setVisitantes([...visitantes, novovisitante])
       reset()
       toast.success("visitante registrado com sucesso!")
@@ -344,7 +344,11 @@ export default function RegistroVisitantes() {
                             </TableCell>
                             <TableCell>{visitante.bi}</TableCell>
                             <TableCell>{visitante.motivoVisita}</TableCell>
-                            <TableCell>{visitante.paciente.nome}</TableCell>
+                            <TableCell>
+                              {visitante.paciente
+                                ? visitante.paciente.nome
+                                : visitante.pacienteId}
+                            </TableCell>
 
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">

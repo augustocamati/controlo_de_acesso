@@ -44,19 +44,47 @@ export default function GerenciamentoQuartos() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm()
-  const [quartos, setQuartos] = useState([])
-  const [tipoQuarto, setTipoQuarto] = useState("")
-  const [statusQuarto, setStatusQuarto] = useState("disponivel")
+type Quarto = {
+  numero: string
+  andar: string
+  tipo: TipoQuarto
+  capacidade: string
+  status: StatusQuarto
+}
+
+type TipoQuarto = "individual" | "duplo" | "suite" |  "isolamento" 
+
+type StatusQuarto =
+  | "disponivel"
+  | "ocupado"
+  | "parcial"
+  | "manutenção"
+  | "reservado"
+
+const [quartos, setQuartos] = useState<Quarto[]>([
+  {
+    numero: "",
+    andar: "",
+    tipo: "individual", // valor inicial válido conforme TipoQuarto
+    capacidade: "",
+    status: "disponivel", // valor inicial válido conforme StatusQuarto
+  },
+])
+
+const [tipoQuarto, setTipoQuarto] = useState<TipoQuarto>("individual")
+
+const [statusQuarto, setStatusQuarto] = useState<StatusQuarto>("disponivel")
+
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(true)
   const [editMode, setEditMode] = useState(false)
-  const [currentQuarto, setCurrentQuarto] = useState(null)
+  const [currentQuarto, setCurrentQuarto] = useState<Quarto | null>(null)
 
 
 
     useEffect(() => {
       // Carregar dados da API
-      fetch("https://controlo-de-acesso-backend.vercel.app/api/quartos")
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/quartos`)
         .then((res) => res.json())
         .then((data) => {
           setQuartos(data)
@@ -71,28 +99,25 @@ export default function GerenciamentoQuartos() {
 
 
   const onSubmit = async (data) => {
+     const novaData= { ...data, tipo: tipoQuarto, status: statusQuarto }
+    console.log("novaData", novaData)
+      
     try {
       if (editMode && currentQuarto) {
          try {
            const response = await fetch(
-             `https://sua-api.com/quartos/${currentQuarto.id}`,
+           `${process.env.NEXT_PUBLIC_API_URL}/quartos/${currentQuarto.id}`,
              {
                method: "PUT",
                headers: {
                  "Content-Type": "application/json",
                },
-               body: JSON.stringify({
-                 numero: data.numero,
-                 andar: data.andar,
-                 tipo: tipoQuarto,
-                 capacidade: Number.parseInt(data.capacidade),
-                 status: statusQuarto,
-               }),
+               body: JSON.stringify(novaData),
              }
            )
 
            if (!response.ok) {
-             console.log('response erro', response)
+             console.log("response erro", JSON.stringify(response))
              throw new Error("Erro ao atualizar o quarto")
            }
 
@@ -112,18 +137,21 @@ console.log("quartoAtualizado", quartoAtualizado)
            toast.error("Erro ao atualizar o quarto")
          }
       } else {
+          console.log("response erro", JSON.stringify(novaData))
         try {
+        
           const response = await fetch(
-            "https://controlo-de-acesso-backend.vercel.app/api/quartos",
+            `${process.env.NEXT_PUBLIC_API_URL}/quartos`,
             {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(data),
+              body: JSON.stringify(novaData),
             }
           )
 
           if (!response.ok) {
-            console.log("response", response)
+              console.log("response erro", JSON.stringify(response))
+              console.log("response erro", response)
             throw new Error("Erro ao registrar quarto")
           }
 
@@ -139,7 +167,7 @@ console.log("quartoAtualizado", quartoAtualizado)
 
       // Limpar formulário
       reset()
-      setTipoQuarto("")
+      setTipoQuarto("individual")
       setStatusQuarto("disponivel")
     } catch (error) {
       console.error("Erro ao processar quarto:", error)
@@ -147,7 +175,7 @@ console.log("quartoAtualizado", quartoAtualizado)
     }
   }
 
-  const handleEdit = (quarto) => {
+  const handleEdit = (quarto:Quarto) => {
     setCurrentQuarto(quarto)
     setEditMode(true)
     setTipoQuarto(quarto.tipo)
@@ -157,10 +185,10 @@ console.log("quartoAtualizado", quartoAtualizado)
     reset({
       numero: quarto.numero,
       andar: quarto.andar,
-      capacidade: quarto.capacidade.toString(),
+      capacidade: quarto.capacidade,
     })
   }
-async function handleDelete(id: any): Promise<void> {
+async function handleDelete(id: string): Promise<void> {
   if (!window.confirm("Tem certeza que deseja excluir este Quarto?")) {
     return
   }
@@ -189,8 +217,7 @@ async function handleDelete(id: any): Promise<void> {
     setEditMode(false)
     setCurrentQuarto(null)
     reset()
-    setTipoQuarto("")
-    setStatusQuarto("disponivel")
+  
   }
 
   const filteredQuartos = quartos.filter(
@@ -198,24 +225,23 @@ async function handleDelete(id: any): Promise<void> {
       quarto.numero.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quarto.andar.toLowerCase().includes(searchTerm.toLowerCase()) ||
       quarto.tipo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      quarto.status.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (quarto.pacienteAtual &&
-        quarto.pacienteAtual.toLowerCase().includes(searchTerm.toLowerCase()))
+      quarto.status.toLowerCase().includes(searchTerm.toLowerCase()) 
   )
 
-  const tipoQuartoLabel = (tipo) => {
-    const labels = {
-      individual: "Individual",
-      duplo: "Duplo",
-      suite: "Suíte",
-      uti: "UTI",
-      isolamento: "Isolamento",
-    }
-    return labels[tipo] || tipo
+const tipoQuartoLabel = (tipo: TipoQuarto): string => {
+  const labels: Record<TipoQuarto, string> = {
+    individual: "Individual",
+    duplo: "Duplo",
+    suite: "Suíte",
+    isolamento: "Isolamento",
   }
 
-  const statusQuartoLabel = (status) => {
-    const labels = {
+  return labels[tipo] || tipo
+}
+
+
+  const statusQuartoLabel = (status: StatusQuarto): string => {
+    const labels: Record<StatusQuarto, string> = {
       disponivel: "Disponível",
       ocupado: "Ocupado",
       parcial: "Parcialmente Ocupado",
@@ -225,8 +251,8 @@ async function handleDelete(id: any): Promise<void> {
     return labels[status] || status
   }
 
-  const statusQuartoClass = (status) => {
-    const classes = {
+  const statusQuartoClass = (status: StatusQuarto): string => {
+    const classes: Record<StatusQuarto, string> = {
       disponivel: "bg-green-100 text-green-800",
       ocupado: "bg-red-100 text-red-800",
       parcial: "bg-yellow-100 text-yellow-800",

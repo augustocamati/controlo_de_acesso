@@ -53,28 +53,14 @@ export default function RegistroVisitantes() {
 
     
 
-  useEffect(() => {
-    // Carregar dados da API
-    fetch("https://controlo-de-acesso-backend.vercel.app/api/pacientes")
-      .then((res) => res.json())
-      .then((data) => {
-        setPacientes(data)
-        setIsLoading(false)
-      })
-      .catch((error) => {
-        console.error("Erro ao carregar pacientes:", error)
-        toast.error("Erro ao carregar dados dos pacientes")
-        setIsLoading(false)
-      })
-  }, [])
   
   useEffect(() => {
     // Carregar dados da API
-    fetch("https://controlo-de-acesso-backend.vercel.app/api/visitantes")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/visitantes`)
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
-    
+
         setIsLoading(false)
       })
       .catch((error) => {
@@ -92,7 +78,7 @@ export default function RegistroVisitantes() {
     console.log("data", JSON.stringify(novadata))
     try {
       const response = await fetch(
-        "https://controlo-de-acesso-backend.vercel.app/api/visitantes",
+        `${process.env.NEXT_PUBLIC_API_URL}/visitantes`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -131,7 +117,7 @@ export default function RegistroVisitantes() {
 
     try {
       const response = await fetch(
-        `https://controlo-de-acesso-backend.vercel.app/api/visitantes/${id}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/visitantes/${id}`,
         {
           method: "DELETE",
         }

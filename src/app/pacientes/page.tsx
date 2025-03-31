@@ -25,7 +25,7 @@ export default function RegistroPacientes() {
 
   useEffect(() => {
     // Carregar dados da API
-    fetch("https://controlo-de-acesso-backend.vercel.app/api/pacientes")
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/pacientes`)
       .then((res) => res.json())
       .then((data) => {
         setPacientes(data)
@@ -46,7 +46,7 @@ export default function RegistroPacientes() {
     console.log("data", JSON.stringify(pacienteData))
     try {
       const response = await fetch(
-        "https://controlo-de-acesso-backend.vercel.app/api/pacientes",
+        `${process.env.NEXT_PUBLIC_API_URL}/pacientes`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -84,7 +84,7 @@ export default function RegistroPacientes() {
 
     try {
       const response = await fetch(
-        `https://controlo-de-acesso-backend.vercel.app/api/pacientes/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/pacientes/${id}`,
         {
           method: "DELETE",
         }

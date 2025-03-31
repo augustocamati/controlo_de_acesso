@@ -58,16 +58,16 @@ export default function Permissoes() {
   }, [])
 
   // Dados simulados para salas do hospital
-  // const salasHospital = [
-  //   { id: 1, nome: "Recepção", nivel: "Público" },
-  //   { id: 2, nome: "Enfermaria", nivel: "Restrito" },
-  //   { id: 3, nome: "UTI", nivel: "Altamente Restrito" },
-  //   { id: 4, nome: "Centro Cirúrgico", nivel: "Altamente Restrito" },
-  //   { id: 5, nome: "Farmácia", nivel: "Restrito" },
-  //   { id: 6, nome: "Laboratório", nivel: "Restrito" },
-  //   { id: 7, nome: "Administração", nivel: "Restrito" },
-  //   { id: 8, nome: "Refeitório", nivel: "Público" },
-  // ]
+  const salasHospital = [
+    { id: 1, nome: "Recepção", nivel: "Público" },
+    { id: 2, nome: "Enfermaria", nivel: "Restrito" },
+    { id: 3, nome: "UTI", nivel: "Altamente Restrito" },
+    { id: 4, nome: "Centro Cirúrgico", nivel: "Altamente Restrito" },
+    { id: 5, nome: "Farmácia", nivel: "Restrito" },
+    { id: 6, nome: "Laboratório", nivel: "Restrito" },
+    { id: 7, nome: "Administração", nivel: "Restrito" },
+    { id: 8, nome: "Refeitório", nivel: "Público" },
+  ]
 
   // Dados simulados para quartos do hospital
   const quartosHospital = [
@@ -149,15 +149,15 @@ export default function Permissoes() {
   //   },
   // ]
 
-  // useEffect(() => {
-  //   // Simulando carregamento de dados da API
-  //   setTimeout(() => {
-  //     // setPermissoes(permissoesSimuladas)
-  //     setSalas(salasHospital)
-  //     setQuartos(quartosHospital)
-  //     setIsLoading(false)
-  //   }, 1000)
-  // }, [])
+  useEffect(() => {
+    // Simulando carregamento de dados da API
+    setTimeout(() => {
+      // setPermissoes(permissoesSimuladas)
+      setSalas(salasHospital)
+      // setQuartos(quartosHospital)
+      setIsLoading(false)
+    }, 1000)
+  }, [])
 
   const handleInputChange = (field, value) => {
     setNovaPermissao({

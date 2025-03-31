@@ -56,11 +56,27 @@ export default function RegistroVisitantes() {
   
   useEffect(() => {
     // Carregar dados da API
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/pacientes`)
+      .then((res) => res.json())
+      .then((data) => {
+        setPacientes(data)
+
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar visitantes:", error)
+        toast.error("Erro ao carregar dados dos visitantes")
+        setIsLoading(false)
+      })
+  }, [])
+  
+  useEffect(() => {
+    // Carregar dados da API
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/visitantes`)
       .then((res) => res.json())
       .then((data) => {
         setVisitantes(data)
-
+console.log('visitantes', visitantes)
         setIsLoading(false)
       })
       .catch((error) => {

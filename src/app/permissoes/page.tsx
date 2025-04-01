@@ -25,7 +25,15 @@ import {
   Lock,
   CreditCard,
 } from "lucide-react"
-
+ interface Permissao {
+   id: number
+   usuario: string
+   cargo: string
+   salas: string[]
+   quartos: string[]
+   rfid: string
+   status: string
+ }
 export default function Permissoes() {
   const [permissoes, setPermissoes] = useState([])
   const [salas, setSalas] = useState([])
@@ -33,20 +41,31 @@ export default function Permissoes() {
   const [quartos, setQuartos] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const [novaPermissao, setNovaPermissao] = useState({
+  interface NovaPermissao {
+    usuario: string;
+    cargo: string;
+    salas: string[];
+    quartos: string[];
+    rfid: string;
+    status: string;
+  }
+
+  const [novaPermissao, setNovaPermissao] = useState<NovaPermissao>({
     usuario: "",
     cargo: "",
     salas: [],
-    quarto: "",
+    quartos: [],
     rfid: "",
     status: "ativo",
-  })
+  });
 
   useEffect(() => {
     // Carregar dados da API
     fetch("https://controlo-de-acesso-backend.vercel.app/api/permissoes")
       .then((res) => res.json())
-      .then((data) => {
+      .then((data: NovaPermissao) => {
+       
+
         setPermissoes(data)
         setIsLoading(false)
       })
@@ -60,13 +79,13 @@ export default function Permissoes() {
   // Dados simulados para salas do hospital
   const salasHospital = [
     { id: 1, nome: "Recepção", nivel: "Público" },
+    { id: 8, nome: "Refeitório", nivel: "Público" },
     { id: 2, nome: "Enfermaria", nivel: "Restrito" },
-    { id: 3, nome: "UTI", nivel: "Altamente Restrito" },
-    { id: 4, nome: "Centro Cirúrgico", nivel: "Altamente Restrito" },
+    { id: 3, nome: "UTI", nivel: "Restrito" },
+    { id: 4, nome: "Centro Cirúrgico", nivel: "Restrito" },
     { id: 5, nome: "Farmácia", nivel: "Restrito" },
     { id: 6, nome: "Laboratório", nivel: "Restrito" },
     { id: 7, nome: "Administração", nivel: "Restrito" },
-    { id: 8, nome: "Refeitório", nivel: "Público" },
   ]
 
   // Dados simulados para quartos do hospital
@@ -101,62 +120,78 @@ export default function Permissoes() {
   // ]
 
   // Dados simulados para permissões
-  // const permissoesSimuladas = [
-  //   {
-  //     id: 1,
-  //     usuario: "Dr. Roberto Silva",
-  //     cargo: "Médico",
-  //     salas: ["UTI", "Centro Cirúrgico", "Enfermaria"],
-  //     quarto: "101",
-  //     rfid: "RFID-MED-1234",
-  //     status: "ativo",
-  //   },
-  //   {
-  //     id: 2,
-  //     usuario: "Enf. Ana Oliveira",
-  //     cargo: "Enfermeiro",
-  //     salas: ["Enfermaria", "Farmácia"],
-  //     quarto: "102",
-  //     rfid: "RFID-ENF-5678",
-  //     status: "ativo",
-  //   },
-  //   {
-  //     id: 3,
-  //     usuario: "José Santos",
-  //     cargo: "Segurança",
-  //     salas: ["Recepção", "Refeitório", "Administração"],
-  //     quarto: "Todos",
-  //     rfid: "RFID-SEG-9012",
-  //     status: "ativo",
-  //   },
-  //   {
-  //     id: 4,
-  //     usuario: "Maria Souza",
-  //     cargo: "Limpeza",
-  //     salas: ["Centro Cirúrgico", "Enfermaria", "Laboratório"],
-  //     quarto: "201",
-  //     rfid: "RFID-LIM-3456",
-  //     status: "inativo",
-  //   },
-  //   {
-  //     id: 5,
-  //     usuario: "Carlos Mendes",
-  //     cargo: "Visitante",
-  //     salas: ["Enfermaria", "Refeitório"],
-  //     quarto: "302",
-  //     rfid: "RFID-VIS-7890",
-  //     status: "ativo",
-  //   },
-  // ]
+  const permissoesSimuladas = [
+    {
+      id: 1,
+      usuario: "Dr. Roberto Silva",
+      cargo: "Médico",
+      salas: ["UTI", "Centro Cirúrgico", "Enfermaria"],
+      quartos: ["101", "102"],
+      rfid: "RFID-MED-1234",
+      status: "ativo",
+    },
+    {
+      id: 2,
+      usuario: "Enf. Ana Oliveira",
+      cargo: "Enfermeiro",
+      salas: ["Enfermaria", "Farmácia"],
+      quartos: ["101", "102"],
+      rfid: "RFID-ENF-5678",
+      status: "ativo",
+    },
+    {
+      id: 3,
+      usuario: "José Santos",
+      cargo: "Segurança",
+      salas: ["Recepção", "Refeitório", "Administração"],
+      quartos: ["101", "102"],
+      rfid: "RFID-SEG-9012",
+      status: "ativo",
+    },
+    {
+      id: 4,
+      usuario: "Maria Souza",
+      cargo: "Limpeza",
+      salas: ["Centro Cirúrgico", "Enfermaria", "Laboratório"],
+      quartos: ["101", "102"],
+      rfid: "RFID-LIM-3456",
+      status: "inativo",
+    },
+    {
+      id: 5,
+      usuario: "Carlos Mendes",
+      cargo: "Visitante",
+      salas: ["Enfermaria", "Refeitório"],
+      quartos: ["101", "102"],
+      rfid: "RFID-VIS-7890",
+      status: "ativo",
+    },
+  ]
+
+  // useEffect(() => {
+  //   // Simulando carregamento de dados da API
+  //   setTimeout(() => {
+  //     // setPermissoes(permissoesSimuladas)
+  //     setSalas(salasHospital)
+  //     // setQuartos(quartosHospital)
+  //     setIsLoading(false)
+  //   }, 1000)
+  // }, [])
 
   useEffect(() => {
-    // Simulando carregamento de dados da API
-    setTimeout(() => {
-      // setPermissoes(permissoesSimuladas)
-      setSalas(salasHospital)
-      // setQuartos(quartosHospital)
-      setIsLoading(false)
-    }, 1000)
+    // Carregar dados da API
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/quartos`)
+      .then((res) => res.json())
+      .then((data) => {
+        setQuartos(data)
+        setSalas(salasHospital)
+        setIsLoading(false)
+      })
+      .catch((error) => {
+        console.error("Erro ao carregar quartos:", error)
+        toast.error("Erro ao carregar dados dos quartos")
+        setIsLoading(false)
+      })
   }, [])
 
   const handleInputChange = (field, value) => {
@@ -164,6 +199,20 @@ export default function Permissoes() {
       ...novaPermissao,
       [field]: value,
     })
+  }
+
+  // Função para lidar com a seleção de múltiplos quartos
+  const handleQuartosChange = (quarto) => {
+    const quartosAtuais = [...novaPermissao.quartos]
+
+    if (quartosAtuais.includes(quarto)) {
+      // Remover quarto se já estiver selecionado
+      const novosQuartos = quartosAtuais.filter((q) => q !== quarto)
+      handleInputChange("quartos", novosQuartos)
+    } else {
+      // Adicionar quarto se não estiver selecionado
+      handleInputChange("quartos", [...quartosAtuais, quarto])
+    }
   }
 
   const handleSalasChange = (sala) => {
@@ -178,6 +227,8 @@ export default function Permissoes() {
       handleInputChange("salas", [...salasAtuais, sala])
     }
   }
+
+  
 
   const handleUsuarioChange = (nomeUsuario) => {
     const usuarioSelecionado = usuarios.find((u) => u.nome === nomeUsuario)
@@ -199,53 +250,81 @@ export default function Permissoes() {
     }
   }
 
-  const adicionarPermissao = () => {
-    // Validar campos obrigatórios
-    if (
-      !novaPermissao.usuario ||
-      novaPermissao.salas.length === 0 ||
-      !novaPermissao.quarto ||
-      !novaPermissao.rfid
-    ) {
-      toast.error("Preencha todos os campos obrigatórios")
-      return
-    }
+   const adicionarPermissao = async () => {
+     // Validar campos obrigatórios
+     if (
+       !novaPermissao.usuario ||
+       novaPermissao.salas.length === 0 ||
+       novaPermissao.quartos.length === 0 ||
+       !novaPermissao.rfid
+     ) {
+       toast.error("Preencha todos os campos obrigatórios")
+       return
+     }
 
-    // Buscar informações do usuário selecionado
-    const usuarioSelecionado = usuarios.find(
-      (u) => u.nome === novaPermissao.usuario
-    )
+     // Buscar informações do usuário selecionado
+     const usuarioSelecionado = usuarios.find(
+       (u) => u.nome === novaPermissao.usuario
+     )
 
-    if (!usuarioSelecionado) {
-      toast.error("Usuário não encontrado")
-      return
-    }
+     if (!usuarioSelecionado) {
+       toast.error("Usuário não encontrado")
+       return
+     }
 
-    // Criar nova permissão
-    const novaPermissaoCompleta = {
-      id: Date.now(),
-      usuario: novaPermissao.usuario,
-      cargo: usuarioSelecionado.cargo,
-      salas: novaPermissao.salas,
-      quarto: novaPermissao.quarto,
-      rfid: novaPermissao.rfid,
-      status: novaPermissao.status,
-    }
+     // Criar nova permissão
+     const novaPermissaoCompleta = {
+   
+       usuario: novaPermissao.usuario,
+       cargo: usuarioSelecionado.cargo,
+       salas: novaPermissao.salas,
+       quartos: novaPermissao.quartos, // Agora é um array
+       rfid: novaPermissao.rfid,
+       status: novaPermissao.status,
+     }
 
-    setPermissoes([...permissoes, novaPermissaoCompleta])
+     
+        try {
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/permissoes`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(novaPermissaoCompleta),
+            }
+          )
 
-    // Resetar formulário
-    setNovaPermissao({
-      usuario: "",
-      cargo: "",
-      salas: [],
-      quarto: "",
-      rfid: "",
-      status: "ativo",
-    })
+          if (!response.ok) {
+            console.log("response erro", JSON.stringify(response))
+            console.log("response erro", response)
+            throw new Error("Erro ao registrar permissão")
+          }
 
-    toast.success("Permissão adicionada com sucesso!")
-  }
+          const novaPermissao =  await response.json()
+          console.log("NOva Permissoes", novaPermissao)
+          setPermissoes([...permissoes,{ ...novaPermissaoCompleta, id: novaPermissao.id }])
+          // Resetar formulário
+          setNovaPermissao({
+            usuario: "",
+            cargo: "",
+            salas: [],
+            quartos: [], // Resetar para array vazio
+            rfid: "",
+            status: "ativo",
+          })
+          toast.success("Permissão adicionada com sucesso!")
+        } catch (error) {
+          console.error("Erro ao registrar permissão:", error)
+          toast.error("Erro ao registrar permissão")
+        }
+     //
+
+    
+
+    
+
+    
+   }
 
   const alterarStatusPermissao = (id, novoStatus) => {
     const permissoesAtualizadas = permissoes.map((permissao) => {
@@ -265,7 +344,7 @@ export default function Permissoes() {
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log("entrou")
+  
       try {
         const [funcionariosRes, visitantesRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_API_URL}/funcionarios`).then((res) =>
@@ -282,21 +361,21 @@ export default function Permissoes() {
           ...funcionariosRes.map((f) => ({
             id: `func_${f.id}`,
             nome: f.nome,
+            cargo: f.cargo,
             tipo: "Funcionário",
             // rfid: f.rfid,
           })),
           ...visitantesRes.map((v) => ({
             id: `visit_${v.id}`,
             nome: v.nome,
+            cargo: "Visitante",
             tipo: "Visitante",
             // rfid: v.rfid,
           })),
         ]
 
         setUsuarios(usuariosFormatados)
-        console.log("funcionariosRes", funcionariosRes)
-        console.log("visitantesRes", visitantesRes)
-        console.log("usuariosFormatados", usuariosFormatados)
+        
 
         // setQuartos(quartosRes)
       } catch (error) {
@@ -419,27 +498,68 @@ export default function Permissoes() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="quarto" className="text-sm font-medium">
-                    Número do Quarto
+                  <Label htmlFor="quartos" className="text-sm font-medium">
+                    Quartos com Acesso Permitido
                   </Label>
-                  <Select
-                    value={novaPermissao.quarto}
-                    onValueChange={(value) =>
-                      handleInputChange("quarto", value)
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione um quarto" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Todos">Todos os quartos</SelectItem>
-                      {quartos.map((quarto) => (
-                        <SelectItem key={quarto.id} value={quarto.numero}>
-                          Quarto {quarto.numero} (Andar {quarto.andar})
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <div className="grid grid-cols-2 gap-2 max-h-40 overflow-y-auto border border-gray-200 rounded-md p-2">
+                    <div className="col-span-2 mb-1">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="todos-quartos"
+                          checked={
+                            novaPermissao.quartos.length === quartos.length
+                          } // Verifica se todos estão selecionados
+                          onChange={() => {
+                            if (
+                              novaPermissao.quartos.length === quartos.length
+                            ) {
+                              // Se todos já estiverem selecionados, desmarcar tudo
+                              handleInputChange("quartos", [])
+                            } else {
+                              // Seleciona todos os quartos
+                              handleInputChange(
+                                "quartos",
+                                quartos.map((q) => q.numero)
+                              )
+                            }
+                          }}
+                          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                        />
+
+                        <label
+                          htmlFor="todos-quartos"
+                          className="ml-2 block text-sm font-medium text-gray-700"
+                        >
+                          Todos os quartos
+                        </label>
+                      </div>
+                    </div>
+                    {novaPermissao.quartos.includes("Todos")
+                      ? null
+                      : quartos.map((quarto) => (
+                          <div key={quarto.id} className="flex items-center">
+                            <input
+                              type="checkbox"
+                              id={`quarto-${quarto.id}`}
+                              checked={novaPermissao.quartos.includes(
+                                quarto.numero
+                              )}
+                              onChange={() =>
+                                handleQuartosChange(quarto.numero)
+                              }
+                              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                            />
+                            <label
+                              htmlFor={`quarto-${quarto.id}`}
+                              className="ml-2 block text-sm text-gray-700"
+                            >
+                              Quarto {quarto.numero} ({quarto.status}) (
+                              {quarto.andar})
+                            </label>
+                          </div>
+                        ))}
+                  </div>
                 </div>
 
                 <div className="space-y-2">
@@ -460,7 +580,7 @@ export default function Permissoes() {
                           htmlFor={`sala-${sala.id}`}
                           className="ml-2 block text-sm text-gray-700"
                         >
-                          {sala.nome}
+                          {sala.nome}({sala.nivel})
                         </label>
                       </div>
                     ))}
@@ -542,9 +662,9 @@ export default function Permissoes() {
                     </thead>
                     <tbody className="divide-y divide-gray-200">
                       {filteredPermissoes.length > 0 ? (
-                        filteredPermissoes.map((permissao) => (
+                        filteredPermissoes.map((permissao, index) => (
                           <tr
-                            key={permissao.id}
+                            key={index}
                             className="hover:bg-gray-50 transition-colors"
                           >
                             <td className="px-6 py-4 whitespace-nowrap">
@@ -568,12 +688,17 @@ export default function Permissoes() {
                                     {sala}
                                   </span>
                                 ))}
-                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                  Quarto {permissao.quarto}
-                                </span>
+                                {permissao.quartos.map((quarto, index) => (
+                                  <span
+                                    key={index}
+                                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
+                                  >
+                                    Quarto {quarto}
+                                  </span>
+                                ))}
                               </div>
                             </td>
-                            <td className="px-6 py-4 whitespace-nowrap">
+                            {/* <td className="px-6 py-4 whitespace-nowrap">
                               <div className="flex items-center">
                                 <Switch
                                   checked={permissao.status === "ativo"}
@@ -597,7 +722,7 @@ export default function Permissoes() {
                                     : "Inativo"}
                                 </span>
                               </div>
-                            </td>
+                            </td> */}
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                               <Button
                                 variant="ghost"

@@ -470,7 +470,7 @@ export default function Permissoes() {
                     <SelectContent>
                       {usuarios.map((usuario) => (
                         <SelectItem key={usuario.id} value={usuario.nome}>
-                          {usuario.nome} ({usuario.tipo})
+                          {usuario.nome} ({usuario.cargo})
                         </SelectItem>
                       ))}
                     </SelectContent>

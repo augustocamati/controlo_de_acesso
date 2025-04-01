@@ -587,7 +587,7 @@ export default function Permissoes() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label
                     htmlFor="status"
                     className="text-sm font-medium flex items-center justify-between"
@@ -608,7 +608,7 @@ export default function Permissoes() {
                       <span className="text-xs text-gray-500">Ativo</span>
                     </div>
                   </Label>
-                </div>
+                </div> */}
 
                 <Button
                   onClick={adicionarPermissao}

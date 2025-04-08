@@ -265,7 +265,7 @@ const menuItems = [
   { href: "/visitantes", icon: ClockIcon, label: "Visitantes" },
   { href: "/permissoes", icon: ShieldIcon, label: "Permissões" },
   { href: "/quartos", icon: QuartosIcon, label: "Quartos" },
-  { href: "/camera", icon: CameraIcon, label: "Câmera" },
+  // { href: "/camera", icon: CameraIcon, label: "Câmera" },
   { href: "/relatorios", icon: FileTextIcon, label: "Relatórios" },
   { href: "/configuracoes", icon: SettingsIcon, label: "Configurações" },
 ]
@@ -275,7 +275,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
   const [showUserMenu, setShowUserMenu] = useState(false)
-
+  function handleCameraClick(
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ): void {
+    event.preventDefault()
+    // Redirect to the camera page
+    window.open("http://192.168.43.80", "_blank") // window.location.href = "/camera"
+  }
   return (
     <div className="w-full bg-gray-100 min-h-screen font-sans">
       <header className="bg-blue-600 text-white p-4 shadow-lg">
@@ -297,7 +303,6 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
             <h1 className="text-2xl font-bold">HospitalAccess</h1>
           </div>
-          
         </div>
       </header>
 
@@ -306,22 +311,37 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <aside className="hidden md:block w-64 bg-white shadow-md p-4">
           <nav>
             <ul className="space-y-2">
-              {menuItems.map((item) => {
+              
+              {menuItems.map((item,index) => {
                 const Icon = item.icon
+
                 return (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                        pathname === item.href
-                          ? "bg-blue-100 text-blue-700"
-                          : "text-gray-700 hover:bg-gray-100"
-                      }`}
-                    >
-                      <Icon />
-                      <span className="font-medium">{item.label}</span>
-                    </Link>
-                  </li>
+                  <>
+                    {index === 0 && (
+                      <li>
+                        <Button
+                          className="w-full px-3 py-3 text-center bg-blue-500 text-white rounded-lg"
+                          onClick={handleCameraClick}
+                        >
+                          <CameraIcon className="mr-2" />
+                          Acessar Câmera
+                        </Button>
+                      </li>
+                    )}
+                    <li key={item.href}>
+                      <Link
+                        href={item.href}
+                        className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                          pathname === item.href
+                            ? "bg-blue-100 text-blue-700"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        <Icon />
+                        <span className="font-medium">{item.label}</span>
+                      </Link>
+                    </li>
+                  </>
                 )
               })}
             </ul>

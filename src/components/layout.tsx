@@ -7,6 +7,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { CameraIcon } from "lucide-react"
 
 // Ícones simplificados para evitar problemas de renderização
 const HomeIcon = () => (
@@ -264,6 +265,7 @@ const menuItems = [
   { href: "/visitantes", icon: ClockIcon, label: "Visitantes" },
   { href: "/permissoes", icon: ShieldIcon, label: "Permissões" },
   { href: "/quartos", icon: QuartosIcon, label: "Quartos" },
+  { href: "/camera", icon: CameraIcon, label: "Câmera" },
   { href: "/relatorios", icon: FileTextIcon, label: "Relatórios" },
   { href: "/configuracoes", icon: SettingsIcon, label: "Configurações" },
 ]

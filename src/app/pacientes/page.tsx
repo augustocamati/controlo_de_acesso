@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { set, useForm } from "react-hook-form"
 import Layout from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,6 +11,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { User, Calendar, Home, Clock, Plus, Search, Download, Trash2, Edit, Loader2 } from "lucide-react"
+import {
+  Select,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+} from "@/components/ui/select"
 
 export default function RegistroPacientes() {
   const {
@@ -20,8 +27,27 @@ export default function RegistroPacientes() {
     formState: { errors, isSubmitting },
   } = useForm()
   const [pacientes, setPacientes] = useState([])
+  const [quartos, setQuartos] = useState([])
+  const [selectedQuarto, setSelectedQuarto] = useState()
   const [searchTerm, setSearchTerm] = useState("")
   const [isLoading, setIsLoading] = useState(true)
+
+   useEffect(() => {
+      // Carregar dados da API
+      fetch(`${process.env.NEXT_PUBLIC_API_URL}/quartos`)
+        .then((res) => res.json())
+        .then((data) => {
+          setQuartos(data)
+        console.log('data', data)
+          setIsLoading(false)
+        })
+        .catch((error) => {
+          console.error("Erro ao carregar quartos:", error)
+          toast.error("Erro ao carregar dados dos quartos")
+          setIsLoading(false)
+        })
+    }, [])
+
 
   useEffect(() => {
     // Carregar dados da API
@@ -41,9 +67,11 @@ export default function RegistroPacientes() {
   const onSubmit = async (data) => {
     const pacienteData = {
       ...data,
-      dataNascimento:`${data.dataNascimento}T14:00:00z` 
+      dataNascimento:`${data.dataNascimento}T14:00:00z`,
+      numeroQuarto: selectedQuarto 
     }
     console.log("data", JSON.stringify(pacienteData))
+
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/pacientes`,
@@ -99,6 +127,16 @@ export default function RegistroPacientes() {
     } catch (error) {
       console.error("Erro ao excluir paciente:", error);
       toast.error("Erro ao excluir paciente");
+    }
+  }
+
+  function handleChangeQuartos(value: string): void {
+    const selectedQuarto = quartos.find((quarto) => quarto.numero === value);
+    if (selectedQuarto) {
+      console.log("Quarto selecionado:", selectedQuarto);
+      setSelectedQuarto(selectedQuarto.numero);
+    } else {
+      console.warn("Quarto não encontrado para o valor:", value);
     }
   }
 
@@ -179,7 +217,7 @@ export default function RegistroPacientes() {
                   )}
                 </div>
 
-                <div className="space-y-2">
+                {/* <div className="space-y-2">
                   <Label htmlFor="numeroQuarto" className="text-sm font-medium">
                     Número do Quarto
                   </Label>
@@ -199,6 +237,24 @@ export default function RegistroPacientes() {
                       Este campo é obrigatório
                     </span>
                   )}
+                </div> */}
+                <div className="space-y-2">
+                  <Label htmlFor="usuario" className="text-sm font-medium">
+                    Quarto
+                  </Label>
+                  <Select  onValueChange={handleChangeQuartos}
+                 >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um Quarto" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {quartos.map((quarto) => (
+                        <SelectItem key={quarto.id} value={quarto.numero}>
+                       {   quarto.numero} {quarto.tipo} ({quarto.capacidade})
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="observacoes" className="text-sm font-medium">

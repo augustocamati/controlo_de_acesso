@@ -68,7 +68,8 @@ export default function RegistroPacientes() {
     const pacienteData = {
       ...data,
       dataNascimento:`${data.dataNascimento}T14:00:00z`,
-      numeroQuarto: selectedQuarto 
+      numeroQuarto: selectedQuarto ,
+      quartoId: quartos.find((quarto) => quarto.numero === selectedQuarto)?.id,
     }
     console.log("data", JSON.stringify(pacienteData))
 

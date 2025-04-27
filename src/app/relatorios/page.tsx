@@ -784,9 +784,7 @@ export default function Relatorios() {
                   <p className="text-2xl font-bold">
                     {estatisticas.totalAcessos}
                   </p>
-                  <div className="mt-2 flex items-center text-sm">
-                    <span className="text-blue-600">Período selecionado</span>
-                  </div>
+                  
                 </div>
 
                 <div className="bg-green-50 p-4 rounded-lg">

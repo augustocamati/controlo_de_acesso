@@ -464,7 +464,7 @@ const tipoQuartoLabel = (tipo: TipoQuarto): string => {
                           Capacidade
                         </TableHead>
                         <TableHead className="font-medium">Status</TableHead>
-                        <TableHead className="font-medium">Paciente</TableHead>
+                        {/* <TableHead className="font-medium">Paciente</TableHead> */}
                         <TableHead className="font-medium text-right">
                           Ações
                         </TableHead>
@@ -494,7 +494,7 @@ const tipoQuartoLabel = (tipo: TipoQuarto): string => {
                                 {statusQuartoLabel(quarto.status)}
                               </span>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               {quarto.pacienteAtual ? (
                                 <span className="text-sm">
                                   {quarto.pacienteAtual}
@@ -502,7 +502,7 @@ const tipoQuartoLabel = (tipo: TipoQuarto): string => {
                               ) : (
                                 <span className="text-sm text-gray-400">-</span>
                               )}
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell className="text-right">
                               <div className="flex justify-end space-x-2">
                                 <Button

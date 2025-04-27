@@ -48,6 +48,7 @@ import {
 import { toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { Switch } from "@/components/ui/switch"
+import { set } from "react-hook-form"
 
 ChartJS.register(
   CategoryScale,
@@ -183,10 +184,7 @@ export default function Relatorios() {
 
       logs.push(log)
     }
-    console.log(
-      "log dddd",
-      logs.sort((a, b) => b.dataHora.getTime() - a.dataHora.getTime())
-    )
+   
     // Ordenar por data (mais recente primeiro)
     return logs.sort((a, b) => b.dataHora.getTime() - a.dataHora.getTime())
   }
@@ -195,9 +193,9 @@ export default function Relatorios() {
   async function fetchAllLogs() {
     try {
       const response = await fetch("http://localhost:3003/api/log-acesso/logs")
-      const data: LogAcesso[] = await response.json()
+      const data= await response.json()
       console.log("Todos os logs:", data)
-      return data
+      return data.data
     } catch (error) {
       console.error("Erro ao buscar todos os logs:", error)
     }
@@ -273,83 +271,90 @@ export default function Relatorios() {
     return log
   }
   // Efeito para simular logs em tempo real
-  // useEffect(() => {
-  //   if (!monitoramentoAtivo) return
-
-  //   const interval = setInterval(() => {
-  //     fetchAllLogs().then(logs=>{
-  //  setLogsAcesso(logs)
-  //  console.log("lg", logs)
-  //     })
-  
-
-  //   }, 5000) // Novo log a cada 5 segundos
-
-  //   return () => clearInterval(interval)
-  // }, [monitoramentoAtivo])
-
-  // Efeito para simular logs em tempo real
   useEffect(() => {
-    if (!monitoramentoAtivo) return
+    if (!monitoramentoAtivo) return 
+    setRelatorioGerado(true)
+       
 
     const interval = setInterval(() => {
-      // const lg = fetchAllLogs()
-      // console.log("lg", lg)
-      console.log("acesso", logsTempoReal)
-      const novoLog = gerarNovoLogTempoReal()
-      console.log("logs", novoLog)
+      fetchAllLogs().then(logs=>{
+   setLogsAcesso(logs)
 
-      // Tocar som de alerta para acessos negados
-      if (
-        novoLog.status === "negado" &&
-        notificacoesSonoras &&
-        audioRef.current
-      ) {
-        audioRef.current
-          .play()
-          .catch((e) => console.error("Erro ao tocar áudio:", e))
-
-        // Mostrar notificação toast para acessos negados
-        toast.error(
-          `Acesso negado: ${obterNomeUsuario(
-            novoLog
-          )} tentou acessar o quarto ${novoLog.quartoNumero}`,
-          {
-            // position: "top-right",
-            autoClose: 5000,
-          }
-        )
-      }
-
-      setLogsTempoReal((prev) => {
-        // Manter apenas os 20 logs mais recentes
-        const newLogs = [novoLog, ...prev.slice(0, 19)]
-
-        // Remover a flag isNew após 3 segundos
-        setTimeout(() => {
-          setLogsTempoReal((current) =>
-            current.map((log) =>
-              log.id === novoLog.id ? { ...log, isNew: false } : log
-            )
-          )
-        }, 3000)
-
-        return newLogs
       })
-    }, 5000) // Novo log a cada 5 segundos
+  
+
+    }, 1000) // Novo log a cada 5 segundos
 
     return () => clearInterval(interval)
-  }, [monitoramentoAtivo, notificacoesSonoras])
+  }, [monitoramentoAtivo])
+
+//   // Efeito para simular logs em tempo real
+//   useEffect(() => {
+//     if (!monitoramentoAtivo) return
+
+//     const interval = setInterval(async () => {
+//       // const lg = fetchAllLogs()
+//       // console.log("lg", lg)
+//       console.log("acesso", logsTempoReal)
+//       // const lg = await fetchAllLogs() // gerarNovoLogTempoReal()
+//  const novoLog= logsAcesso[0] //lg[0]
+//       console.log("nlogs", novoLog)
+
+//       // Tocar som de alerta para acessos negados
+//       if (
+//         novoLog.status === "negado" &&
+//         notificacoesSonoras &&
+//         audioRef.current
+//       ) {
+//         audioRef.current
+//           .play()
+//           .catch((e) => console.error("Erro ao tocar áudio:", e))
+
+//         // Mostrar notificação toast para acessos negados
+//         toast.error(
+//           `Acesso negado: ${obterNomeUsuario(
+//             novoLog
+//           )} tentou acessar o quarto ${novoLog.quartoNumero}`,
+//           {
+//             // position: "top-right",
+//             autoClose: 5000,
+//           }
+//         )
+//       }
+
+//       setLogsTempoReal((prev) => {
+//         // Manter apenas os 20 logs mais recentes
+//         const newLogs = [novoLog, ...prev.slice(0, 19)]
+
+//         // Remover a flag isNew após 3 segundos
+//         setTimeout(() => {
+//           setLogsTempoReal((current) =>
+//             current.map((log) =>
+//               log.id === novoLog.id ? { ...log, isNew: false } : log
+//             )
+//           )
+//         }, 3000)
+
+//         return newLogs
+//       })
+//     }, 5000) // Novo log a cada 5 segundos
+
+//     return () => clearInterval(interval)
+//   }, [monitoramentoAtivo, notificacoesSonoras])
 
   const gerarRelatorio = () => {
     setIsLoading(true)
 
     // Simular chamada à API
-    setTimeout(() => {
-      const logs = gerarDadosSimulados()
-      const logsAPI = fetchAllLogs()
-      console.log("first", logs)
-      setLogsAcesso(logs)
+    setTimeout(async () => {
+      // const logs = gerarDadosSimulados()
+      const logsAPI = await fetchAllLogs()
+      console.log("logs API", logsAPI)
+      if (logsAPI) {
+        setLogsAcesso(logsAPI)
+      } else {
+        console.error("logsAPI is undefined")
+      }
       setRelatorioGerado(true)
       setIsLoading(false)
       setPaginaAtual(1)
@@ -369,8 +374,12 @@ export default function Relatorios() {
     }
 
     logsAcesso.forEach((log) => {
-      if (log.tipoUsuario && dadosPorUsuario[log.tipoUsuario]) {
-        dadosPorUsuario[log.tipoUsuario][log.status]++
+         console.log("first", log.tipoUsuario)
+      if (log.tipoUsuario) {
+        const tipoUsuarioKey = log.tipoUsuario.toLowerCase() === "medico" ? "médico" : log.tipoUsuario;
+        if (dadosPorUsuario[tipoUsuarioKey]) {
+          dadosPorUsuario[tipoUsuarioKey][log.status]++;
+        }
       }
     })
 
@@ -458,11 +467,14 @@ export default function Relatorios() {
     const acessosAutorizados = logsAcesso.filter(
       (log) => log.status === "autorizado"
     ).length
+
+    
     const acessosNegados = totalAcessos - acessosAutorizados
     const taxaAutorizacao = (acessosAutorizados / totalAcessos) * 100
 
     const acessosPorTipo = {
-      médico: logsAcesso.filter((log) => log.tipoUsuario === "médico").length,
+      médico: logsAcesso.filter((log) => log.tipoUsuario === "medico").length,
+     
       enfermeiro: logsAcesso.filter((log) => log.tipoUsuario === "enfermeiro")
         .length,
       segurança: logsAcesso.filter((log) => log.tipoUsuario === "segurança")
@@ -589,8 +601,7 @@ export default function Relatorios() {
               Monitoramento em Tempo Real
             </CardTitle>
             <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-3">
-               
+              {/* <div className="flex items-center space-x-3">
                 <Button
                   onClick={gerarRelatorio}
                   className="w-full bg-blue-600 hover:bg-blue-700"
@@ -605,8 +616,8 @@ export default function Relatorios() {
                     "Gerar Relatório"
                   )}
                 </Button>
-              </div>
-              <div className="flex items-center space-x-2">
+              </div> */}
+              {/* <div className="flex items-center space-x-2">
                 <Label htmlFor="monitoramento" className="text-sm">
                   Monitoramento
                 </Label>
@@ -615,8 +626,7 @@ export default function Relatorios() {
                   checked={monitoramentoAtivo}
                   onCheckedChange={setMonitoramentoAtivo}
                 />
-              </div>
-             
+              </div> */}
             </div>
           </div>
           <CardDescription>
@@ -624,19 +634,19 @@ export default function Relatorios() {
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
-          {logsTempoReal.length > 0 ? (
+          {logsAcesso.length > 0 ? (
             <div
               className={`p-6 rounded-lg border ${
-                logsTempoReal[0].isNew ? "animate-pulse" : ""
+                logsAcesso[0].isNew ? "animate-pulse" : ""
               } ${
-                logsTempoReal[0].status === "autorizado"
+                logsAcesso[0].status === "autorizado"
                   ? "bg-green-50 border-green-200"
                   : "bg-red-50 border-red-200"
               }`}
             >
               <div className="flex justify-between items-start">
                 <div className="flex items-center">
-                  {logsTempoReal[0].status === "autorizado" ? (
+                  {logsAcesso[0].status === "autorizado" ? (
                     <div className="p-3 bg-green-100 rounded-full mr-4">
                       <CheckCircle className="h-6 w-6 text-green-600" />
                     </div>
@@ -647,30 +657,30 @@ export default function Relatorios() {
                   )}
                   <div>
                     <h3 className="text-xl font-semibold mb-1">
-                      {logsTempoReal[0].status === "autorizado"
+                      {logsAcesso[0].status === "autorizado"
                         ? "Acesso Autorizado"
                         : "Acesso Negado"}
                     </h3>
                     <p className="text-lg mb-1">
                       <span className="font-medium">
-                        {obterNomeUsuario(logsTempoReal[0])}
+                        {obterNomeUsuario(logsAcesso[0])}
                       </span>{" "}
-                      ({logsTempoReal[0].tipoUsuario})
+                      ({logsAcesso[0].tipoUsuario})
                     </p>
                     <p className="text-base">
-                      {logsTempoReal[0].tipoAcesso === "entrada"
+                      {logsAcesso[0].tipoAcesso === "entrada"
                         ? "Entrou no"
                         : "Saiu do"}{" "}
-                      quarto {logsTempoReal[0].quartoNumero}
+                      quarto {logsAcesso[0].quartoNumero}
                     </p>
                   </div>
                 </div>
                 <div className="text-right">
                   <p className="text-lg font-medium">
-                    {formatarHora(logsTempoReal[0].dataHora)}
+                    {formatarHora(logsAcesso[0].dataHora)}
                   </p>
                   <p className="text-sm text-gray-500 mt-1">
-                    {logsTempoReal[0].rfid}
+                    {logsAcesso[0].rfid}
                   </p>
                 </div>
               </div>
@@ -760,77 +770,73 @@ export default function Relatorios() {
         </Card> */}
 
         {relatorioGerado && estatisticas && (
-        
-          
-
-            <Card className="shadow-md lg:col-span-3">
-              <CardHeader className="bg-blue-50 border-b pb-3">
-                <CardTitle className="text-lg flex items-center text-blue-700">
-                  <Activity className="mr-2 h-5 w-5" />
-                  Resumo Estatístico
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pt-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500">Total de Acessos</p>
-                    <p className="text-2xl font-bold">
-                      {estatisticas.totalAcessos}
-                    </p>
-                    <div className="mt-2 flex items-center text-sm">
-                      <span className="text-blue-600">Período selecionado</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-green-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500">Acessos Autorizados</p>
-                    <p className="text-2xl font-bold">
-                      {estatisticas.acessosAutorizados}
-                    </p>
-                    <div className="mt-2 flex items-center text-sm">
-                      <span className="text-green-600">
-                        {estatisticas.taxaAutorizacao.toFixed(1)}% do total
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="bg-red-50 p-4 rounded-lg">
-                    <p className="text-sm text-gray-500">Acessos Negados</p>
-                    <p className="text-2xl font-bold">
-                      {estatisticas.acessosNegados}
-                    </p>
-                    <div className="mt-2 flex items-center text-sm">
-                      <span className="text-red-600">
-                        {(100 - estatisticas.taxaAutorizacao).toFixed(1)}% do
-                        total
-                      </span>
-                    </div>
+          <Card className="shadow-md lg:col-span-3">
+            <CardHeader className="bg-blue-50 border-b pb-3">
+              <CardTitle className="text-lg flex items-center text-blue-700">
+                <Activity className="mr-2 h-5 w-5" />
+                Resumo Estatístico
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Total de Acessos</p>
+                  <p className="text-2xl font-bold">
+                    {estatisticas.totalAcessos}
+                  </p>
+                  <div className="mt-2 flex items-center text-sm">
+                    <span className="text-blue-600">Período selecionado</span>
                   </div>
                 </div>
 
-                <div className="mt-4">
-                  <h3 className="text-sm font-medium mb-2">
-                    Distribuição por Tipo de Usuário
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
-                    {Object.entries(estatisticas.acessosPorTipo).map(
-                      ([tipo, quantidade]) => (
-                        <div
-                          key={tipo}
-                          className="bg-gray-50 p-2 rounded text-center"
-                        >
-                          <p className="text-xs text-gray-500 capitalize">
-                            {tipo}
-                          </p>
-                          <p className="font-bold">{quantidade}</p>
-                        </div>
-                      )
-                    )}
+                <div className="bg-green-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Acessos Autorizados</p>
+                  <p className="text-2xl font-bold">
+                    {estatisticas.acessosAutorizados}
+                  </p>
+                  <div className="mt-2 flex items-center text-sm">
+                    <span className="text-green-600">
+                      {estatisticas.taxaAutorizacao.toFixed(1)}% do total
+                    </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          
+
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <p className="text-sm text-gray-500">Acessos Negados</p>
+                  <p className="text-2xl font-bold">
+                    {estatisticas.acessosNegados}
+                  </p>
+                  <div className="mt-2 flex items-center text-sm">
+                    <span className="text-red-600">
+                      {(100 - estatisticas.taxaAutorizacao).toFixed(1)}% do
+                      total
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-4">
+                <h3 className="text-sm font-medium mb-2">
+                  Distribuição por Tipo de Usuário
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
+                  {Object.entries(estatisticas.acessosPorTipo).map(
+                    ([tipo, quantidade]) => (
+                      <div
+                        key={tipo}
+                        className="bg-gray-50 p-2 rounded text-center"
+                      >
+                        <p className="text-xs text-gray-500 capitalize">
+                          {tipo}
+                        </p>
+                        <p className="font-bold">{quantidade}</p>
+                      </div>
+                    )
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         )}
 
         {relatorioGerado && (
@@ -880,7 +886,7 @@ export default function Relatorios() {
                       <TableRow>
                         <TableHead className="font-medium">ID</TableHead>
                         <TableHead className="font-medium">RFID</TableHead>
-                        <TableHead className="font-medium">Tipo</TableHead>
+                        {/* <TableHead className="font-medium">Tipo</TableHead> */}
                         <TableHead className="font-medium">Data/Hora</TableHead>
                         <TableHead className="font-medium">Status</TableHead>
                         <TableHead className="font-medium">Usuário</TableHead>
@@ -888,7 +894,7 @@ export default function Relatorios() {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {logsPaginados.length > 0 ? (
+                      {logsAcesso?.length > 0 ? (
                         logsPaginados.map((log) => (
                           <TableRow key={log.id} className="hover:bg-gray-50">
                             <TableCell>{log.id}</TableCell>
@@ -897,7 +903,7 @@ export default function Relatorios() {
                                 {log.rfid}
                               </span>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               <span
                                 className={`px-2 py-1 rounded-full text-xs ${
                                   log.tipoAcesso === "entrada"
@@ -909,7 +915,7 @@ export default function Relatorios() {
                                   ? "Entrada"
                                   : "Saída"}
                               </span>
-                            </TableCell>
+                            </TableCell> */}
                             <TableCell>{formatarData(log.dataHora)}</TableCell>
                             <TableCell>
                               <span

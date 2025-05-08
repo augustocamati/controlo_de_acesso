@@ -192,7 +192,7 @@ export default function Relatorios() {
   /////////////////////////////////////////////////////////
   async function fetchAllLogs() {
     try {
-      const response = await fetch("http://localhost:3002/api/log-acesso/logs")
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/log-acesso/logs`)
       const data= await response.json()
       console.log("Todos os logs:", data)
       return data.data

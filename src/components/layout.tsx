@@ -280,7 +280,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   ): void {
     event.preventDefault()
     // Redirect to the camera page
-    window.open("http://192.168.43.80", "_blank") // window.location.href = "/camera"
+    window.open("http://172.20.10.4", "_blank") // window.location.href = "/camera"
   }
   return (
     <div className="w-full bg-gray-100 min-h-screen font-sans">
